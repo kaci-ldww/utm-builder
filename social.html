@@ -269,7 +269,16 @@
 // ─────────────────────────────────────────────
 // CUSTOMIZE YOUR PRESETS HERE
 // ─────────────────────────────────────────────
-const SOURCES = ["facebook","instagram","tiktok","youtube","fbstories","igstories","igbio","fbevent"];
+const SOURCES = [
+  { label: "Facebook", source: "facebook"},
+  { label: "Instagram", source: "instagram"},
+  { label: "TikTok", source: "tiktok"},
+  { label: "YouTube", source: "youtube"},
+  { label: "Facebook Stories", source: "fbstories"},
+  { label: "Instagram Stories", source: "igstories"},
+  { label: "Instagram Bio", source: "igbio"}
+  { label: "Facebook Event", source:"fbevent"}
+  ];
 
 const CAMPAIGN_PRESETS = [
   { label: "Brand Awareness", campaign: "brandawareness" },
