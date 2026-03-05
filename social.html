@@ -129,10 +129,15 @@
         <div class="field">
           <label>Content</label>
           <input type="text" id="f-content" placeholder="optional" oninput="updatePreview()" />
+          <div class="hint">secondary campaign level</div>
+        </div>
+        <div class="field">
+          <label>Term/Identifier</label>
+          <input type="text" id="f-content" placeholder="optional" oninput="updatePreview()" />
           <div class="hint">type of content</div>
         </div>
       <div class="field">
-        <label>Term</label>
+        <label>Other Identifiers</label>
         <select id="artist-select" onchange="document.getElementById('f-term').value = this.value; updatePreview();" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#e2e8f0; font-size:13px; padding:9px 12px; outline:none; font-family:'DM Mono',monospace; margin-bottom:6px;">
         <option value="">Loading artists...</option>
         </select>
