@@ -139,34 +139,36 @@
       </div>
     </div>
 
-    <!-- Campaign -->
-    <div class="section">
-      <div class="section-label">Campaign <span>select one</span></div>
-      <div class="btn-row" id="campaign-btns"></div>
-    </div>
+    <div class="card">
+      <!-- Post Type -->
+      <div class="section">
+        <div class="section-label">Post Type <span>fills source</span></div>
+        <div class="btn-row" id="source-btns"></div>
+      </div>
 
-    <!-- Post Type -->
-    <div class="section">
-      <div class="section-label">Platform <span>fills source</span></div>
-      <div class="btn-row" id="source-btns"></div>
-    </div>
-    
-    <!-- Content — dynamic -->
-    <div class="section">
-      <div class="section-label">Content <span>based on campaign</span></div>
-      <div class="btn-row" id="content-btns"><span class="empty-hint">Select a campaign first</span></div>
-    </div>
+      <!-- Campaign -->
+      <div class="section">
+        <div class="section-label">Campaign <span>select one</span></div>
+        <div class="btn-row" id="campaign-btns"></div>
+      </div>
 
-    <!-- Term — dynamic -->
-    <div class="section">
-      <div class="section-label">Term <span>based on campaign</span></div>
-      <div class="btn-row" id="term-btns"><span class="empty-hint">Select a campaign first</span></div>
-    </div>
+      <!-- Content — dynamic -->
+      <div class="section">
+        <div class="section-label">Content <span>based on campaign</span></div>
+        <div class="btn-row" id="content-btns"><span class="empty-hint">Select a campaign first</span></div>
+      </div>
 
-    <!-- Other Identifiers — dynamic -->
-    <div class="section" id="other-section">
-      <div class="section-label" id="other-label">Other Identifiers <span id="other-hint">based on campaign</span></div>
-      <div class="btn-row" id="other-btns"><span class="empty-hint">Select a campaign first</span></div>
+      <!-- Term — dynamic -->
+      <div class="section">
+        <div class="section-label">Term <span>based on campaign</span></div>
+        <div class="btn-row" id="term-btns"><span class="empty-hint">Select a campaign first</span></div>
+      </div>
+
+      <!-- Other Identifiers — dynamic -->
+      <div class="section" id="other-section" style="margin-bottom:0">
+        <div class="section-label" id="other-label">Other Identifiers <span id="other-hint">based on campaign</span></div>
+        <div class="btn-row" id="other-btns"><span class="empty-hint">Select a campaign first</span></div>
+      </div>
     </div>
 
     <!-- Hidden inputs + medium -->
@@ -269,22 +271,14 @@
 // ─────────────────────────────────────────────
 // CUSTOMIZE YOUR PRESETS HERE
 // ─────────────────────────────────────────────
-const SOURCES = [
-  { label: "Facebook", source: "facebook"},
-  { label: "Instagram", source: "instagram"},
-  { label: "TikTok", source: "tiktok"},
-  { label: "YouTube", source: "youtube"},
-  { label: "Facebook Stories", source: "fbstories"},
-  { label: "Instagram Stories", source: "igstories"},
-  { label: "Instagram Bio", source: "igbio"}
-  { label: "Facebook Event", source:"fbevent"}
-  ];
+const SOURCES = ["facebook","instagram","tiktok","youtube","fbstories","igstories","igbio","fbevent"];
 
 const CAMPAIGN_PRESETS = [
   { label: "Brand Awareness", campaign: "brandawareness" },
   { label: "Entertainment",   campaign: "entertainment"  },
   { label: "Gaming",          campaign: "gaming"         },
   { label: "Hotel",           campaign: "hotel"          },
+  { label: "Wild Card",       campaign: "wildcard"       },
   { label: "Golf",            campaign: "golf"           },
   { label: "Amenities",       campaign: "amenities"      }
 ];
