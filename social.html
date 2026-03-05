@@ -106,13 +106,13 @@
         <label>Destination URL *</label>
         <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
       </div>
-      <div class="grid-2">
-        <div class="field">
-          <label>Source *</label>
-          <input type="text" id="f-source" placeholder="adhoc" list="dl-source" oninput="updatePreview()" />
-          <datalist id="dl-source"></datalist>
-          <div class="hint">e.g. facebook, instagram</div>
-        </div>
+    <div class="field">
+       <label>Source *</label>
+      <input type="text" id="f-source" placeholder="facebook" list="dl-source" oninput="updatePreview()" />
+      <datalist id="dl-source"></datalist>
+      <div class="hint">e.g. facebook, instagram</div>
+  </div>
+<input type="hidden" id="f-medium" value="social" />
         <div class="field">
       <input type="hidden" id="f-medium" value="social" />
       </div>
