@@ -128,11 +128,9 @@
         <div class="hint">e.g. brandawareness, gaming</div>
       <div class="field">
         <label>Term</label>
-        <select onchange="document.getElementById('f-term').value = this.value; updatePreview();" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#e2e8f0; font-size:13px; padding:9px 12px; outline:none; font-family:'DM Mono',monospace; margin-bottom:6px;">
-        <option value="">-- Select artist --</option>
-        <option value="cunderwood">Carrie Underwood</option>
-        <option value="jaldean">Jason Aldean</option>
-      </select>
+        <select id="artist-select" onchange="document.getElementById('f-term').value = this.value; updatePreview();" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#e2e8f0; font-size:13px; padding:9px 12px; outline:none; font-family:'DM Mono',monospace; margin-bottom:6px;">
+  <option value="">Loading artists...</option>
+        </select>
       <input type="text" id="f-term" placeholder="or type manually" oninput="updatePreview()" />
   <div class="hint">Artist Content</div>
 </div>
@@ -417,6 +415,22 @@ function switchTab(tab) {
   if (tab === "history") updateHistoryTab();
 }
 
+fetch("https://script.google.com/macros/s/AKfycbyEporvTXGaegROFJx0CDioC2V1nNSXeXMH2NXB68y_03YuTxeQoMKX4Bcto_xKKDE/exec")
+  .then(r => r.json())
+  .then(function(artists) {
+    var select = document.getElementById("artist-select");
+    select.innerHTML = '<option value="">-- Select artist --</option>';
+    artists.forEach(function(artist) {
+      var opt = document.createElement("option");
+      opt.value = artist.code;        // column J goes into the UTM
+      opt.textContent = artist.name;  // column A is what people see
+      select.appendChild(opt);
+    });
+  })
+  .catch(function() {
+    document.getElementById("artist-select").innerHTML = '<option value="">Could not load artists</option>';
+  });
+  
 updateHistoryTab();
 </script>
 </body>
