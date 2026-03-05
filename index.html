@@ -97,9 +97,9 @@
   </div>
 
   <div id="panel-builder" class="panel active">
-    <div class="presets-label">Source Presets</div>
+    <div class="presets-label">Source</div>
     <div class="presets-row" id="presets-container"></div>
-    <div class="presets-label">Campaign Presets</div>
+    <div class="presets-label">Campaign</div>
     <div class="presets-row" id="campaign-presets-container"></div>
 
     <div class="card">
@@ -225,15 +225,6 @@ SOURCES.forEach(function(v) { var o = document.createElement("option"); o.value 
 MEDIUMS.forEach(function(v) { var o = document.createElement("option"); o.value = v; document.getElementById("dl-medium").appendChild(o); });
 CAMPAIGN_PRESETS.forEach(function(p) { var o = document.createElement("option"); o.value = p.campaign; document.getElementById("dl-campaign").appendChild(o); });
 
-// Source preset buttons (purple tint)
-CHANNEL_PRESETS.forEach(function(p) {
-  var btn = document.createElement("button");
-  btn.className = "preset-btn";
-  btn.textContent = p.label;
-  btn.onclick = function() { document.getElementById("f-source").value = p.source; document.getElementById("f-medium").value = p.medium; updatePreview(); };
-  document.getElementById("presets-container").appendChild(btn);
-});
-
 // Campaign preset buttons (blue tint)
 CAMPAIGN_PRESETS.forEach(function(p) {
   var btn = document.createElement("button");
@@ -241,6 +232,15 @@ CAMPAIGN_PRESETS.forEach(function(p) {
   btn.textContent = p.label;
   btn.onclick = function() { document.getElementById("f-campaign").value = p.campaign; updatePreview(); };
   document.getElementById("campaign-presets-container").appendChild(btn);
+});
+  
+  // Source preset buttons (purple tint)
+CHANNEL_PRESETS.forEach(function(p) {
+  var btn = document.createElement("button");
+  btn.className = "preset-btn";
+  btn.textContent = p.label;
+  btn.onclick = function() { document.getElementById("f-source").value = p.source; document.getElementById("f-medium").value = p.medium; updatePreview(); };
+  document.getElementById("presets-container").appendChild(btn);
 });
 
 function slugify(str) { return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, ""); }
