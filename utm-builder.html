@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTM Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #020817; font-family: 'DM Sans', sans-serif; color: #e2e8f0; min-height: 100vh; padding: 32px 16px; }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::placeholder { color: #334155 !important; }
+
+    #app { max-width: 660px; margin: 0 auto; }
+
+    .header { margin-bottom: 24px; }
+    .header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .logo { width: 28px; height: 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    h1 { font-size: 20px; font-weight: 700; color: #f1f5f9; letter-spacing: -0.02em; }
+    .subtitle { font-size: 13px; color: #475569; }
+
+    .tabs { display: flex; gap: 3px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid #1e293b; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 7px 4px; border: none; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: all 0.15s; white-space: nowrap; background: transparent; color: #475569; }
+    .tab-btn.active { background: #1e293b; color: #f1f5f9; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .presets-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
+    .presets-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .preset-btn { padding: 5px 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #94a3b8; font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .preset-btn:hover { border-color: #6366f1; color: #c7d2fe; }
+
+    .card { background: #0a0f1e; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    .card.valid { border-color: #6366f133; }
+
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
+    .field .hint { font-size: 11px; color: #64748b; margin-top: 4px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    input[type="text"], input[type="url"] {
+      width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px;
+      color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none;
+      font-family: 'DM Mono', monospace; transition: border-color 0.15s;
+    }
+    input[type="text"]:focus, input[type="url"]:focus { border-color: #6366f1; }
+    input.sans { font-family: 'DM Sans', sans-serif; }
+
+    .toggle-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .toggle { width: 36px; height: 20px; background: #1e293b; border-radius: 10px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
+    .toggle.on { background: #6366f1; }
+    .toggle-knob { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: #fff; border-radius: 50%; transition: left 0.2s; }
+    .toggle.on .toggle-knob { left: 19px; }
+    .toggle-label { font-size: 12px; color: #64748b; }
+
+    .url-preview { font-size: 12px; color: #94a3b8; word-break: break-all; font-family: 'DM Mono', monospace; line-height: 1.7; background: #020817; padding: 10px 12px; border-radius: 7px; border: 1px solid #1e293b; }
+    .preview-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .preview-label.valid { color: #6366f1; }
+    .preview-label.invalid { color: #475569; }
+    .c-base { color: #e2e8f0; }
+    .c-sep { color: #475569; }
+    .c-key { color: #818cf8; }
+    .c-val { color: #34d399; }
+
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .btn-primary { flex: 1; padding: 11px; border: none; border-radius: 9px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+    .btn-primary:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
+    .btn-primary.copied { background: #16a34a; }
+    .btn-secondary { padding: 11px 16px; background: #0f172a; border: 1px solid #1e293b; border-radius: 9px; color: #64748b; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .log-status { font-size: 12px; }
+    .log-status.ok { color: #22c55e; }
+    .log-status.err { color: #f87171; }
+    .log-status.loading { color: #818cf8; }
+
+    /* History */
+    .history-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: #475569; }
+    .btn-ghost { font-size: 12px; padding: 4px 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #64748b; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .history-item { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+    .history-info { flex: 1; min-width: 0; }
+    .history-tags { font-size: 11px; color: #6366f1; font-weight: 600; margin-bottom: 3px; font-family: 'DM Mono', monospace; }
+    .history-url { font-size: 11px; color: #475569; word-break: break-all; font-family: 'DM Mono', monospace; }
+    .history-actions { display: flex; gap: 5px; flex-shrink: 0; }
+    .btn-mini { font-size: 11px; padding: 4px 8px; background: #1e293b; border: none; border-radius: 5px; color: #94a3b8; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .btn-mini.green { background: #22c55e22; color: #22c55e; }
+    .btn-mini.logged { background: #16a34a22; color: #22c55e; cursor: default; }
+    .empty-state { text-align: center; padding: 56px 0; color: #334155; }
+    .empty-icon { font-size: 36px; margin-bottom: 12px; }
+    .empty-text { font-size: 14px; }
+
+    /* Sheets */
+    .step-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+    .step-num { width: 22px; height: 22px; background: #6366f122; border: 1px solid #6366f144; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #818cf8; flex-shrink: 0; }
+    .step-text { font-size: 13px; color: #94a3b8; line-height: 1.5; padding-top: 2px; }
+    .code-block-wrap { position: relative; }
+    pre { background: #020817; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; font-size: 11px; color: #94a3b8; font-family: 'DM Mono', monospace; overflow-x: auto; white-space: pre-wrap; line-height: 1.7; }
+    .copy-code-btn { position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 3px 8px; background: #1e293b; border: 1px solid #334155; border-radius: 5px; color: #64748b; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .copy-code-btn.copied { background: #22c55e22; color: #22c55e; }
+    .sheets-connected { margin-top: 10px; font-size: 12px; color: #22c55e; display: flex; gap: 6px; align-items: center; }
+    .btn-full { width: 100%; padding: 10px; border: none; border-radius: 9px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+    .btn-full:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="header-row">
+      <div class="logo">⚡</div>
+      <h1>UTM Builder</h1>
+    </div>
+    <p class="subtitle">Generate, log, and manage tracking links for your team.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('builder')">Builder</button>
+    <button class="tab-btn" id="tab-history" onclick="switchTab('history')">History</button>
+    <button class="tab-btn" id="tab-sheets" onclick="switchTab('sheets')">Sheets</button>
+  </div>
+
+  <!-- BUILDER -->
+  <div id="panel-builder" class="panel active">
+    <div class="presets-label">Quick Presets</div>
+    <div class="presets-row" id="presets-container"></div>
+
+    <div class="card">
+      <div class="field">
+        <label>Destination URL *</label>
+        <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Source *</label>
+          <input type="text" id="f-source" placeholder="google" list="dl-source" oninput="updatePreview()" />
+          <datalist id="dl-source"></datalist>
+          <div class="hint">e.g. google, newsletter</div>
+        </div>
+        <div class="field">
+          <label>Medium *</label>
+          <input type="text" id="f-medium" placeholder="cpc" list="dl-medium" oninput="updatePreview()" />
+          <datalist id="dl-medium"></datalist>
+          <div class="hint">e.g. cpc, email, social</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Campaign *</label>
+        <input type="text" id="f-campaign" placeholder="spring-sale-2025" list="dl-campaign" oninput="updatePreview()" />
+        <datalist id="dl-campaign"></datalist>
+        <div class="hint">e.g. spring-sale-2025</div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Term</label>
+          <input type="text" id="f-term" placeholder="running+shoes" oninput="updatePreview()" />
+          <div class="hint">Paid keywords</div>
+        </div>
+        <div class="field">
+          <label>Content</label>
+          <input type="text" id="f-content" placeholder="hero-cta-blue" oninput="updatePreview()" />
+          <div class="hint">A/B differentiation</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <div class="toggle-row">
+          <div class="toggle on" id="toggle-slug" onclick="toggleSlug()"><div class="toggle-knob"></div></div>
+          <span class="toggle-label">Auto-format (lowercase + hyphens)</span>
+        </div>
+        <div class="toggle-row" id="autolog-row" style="display:none">
+          <div class="toggle" id="toggle-autolog" onclick="toggleAutoLog()"><div class="toggle-knob"></div></div>
+          <span class="toggle-label">Auto-log to Sheets on copy</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="preview-card" style="display:none">
+      <div class="preview-label" id="preview-label"></div>
+      <div class="url-preview" id="url-preview"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="copy-btn" onclick="handleCopy()" disabled>Copy URL</button>
+      <span class="log-status" id="log-status" style="display:none"></span>
+      <button class="btn-secondary" onclick="resetForm()">Reset</button>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="panel-history" class="panel">
+    <div id="history-list"></div>
+  </div>
+
+  <!-- SHEETS -->
+  <div id="panel-sheets" class="panel">
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:4px;">Connect Google Sheets</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:16px;line-height:1.6;">Every UTM you generate can be automatically logged to a Google Sheet. Takes ~3 minutes to set up — no third-party services needed.</div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-text">Create a new Google Sheet (any name is fine).</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-text">Go to <strong>Extensions → Apps Script</strong>. Paste the code below, then save.</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-text">Click <strong>Deploy → New deployment → Web app</strong>. Set "Execute as: Me" and "Who has access: Anyone". Click Deploy and authorize.</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-text">Copy the <strong>Web App URL</strong> and paste it below.</div></div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;">Apps Script Code</div>
+      <div class="code-block-wrap">
+        <pre id="apps-script-code"></pre>
+        <button class="copy-code-btn" id="copy-script-btn" onclick="copyScript()">Copy</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>Your Web App URL</label>
+        <input type="url" id="sheets-url-input" class="sans" placeholder="https://script.google.com/macros/s/.../exec" oninput="updateSaveBtn()" />
+      </div>
+      <button class="btn-full" id="save-sheets-btn" onclick="saveSheets()" disabled>Save &amp; Connect</button>
+      <div class="sheets-connected" id="sheets-connected" style="display:none">✓ Connected — UTMs will log on copy when auto-log is on, or manually from History.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// ✏️  CUSTOMIZE YOUR PRESETS HERE
+// ─────────────────────────────────────────────
+const SOURCES = ["google","facebook","instagram","linkedin","twitter","email","newsletter","bing","youtube","tiktok","reddit","pinterest"];
+const MEDIUMS = ["cpc","email","social","organic","referral","display","video","affiliate","sms","push"];
+const CAMPAIGN_PRESETS = ["brand-awareness","retargeting","lead-gen","product-launch","seasonal-promo","onboarding"];
+const CHANNEL_PRESETS = [
+  { label: "Google Ads",       source: "google",     medium: "cpc"   },
+  { label: "Facebook Ad",      source: "facebook",   medium: "cpc"   },
+  { label: "Instagram Ad",     source: "instagram",  medium: "cpc"   },
+  { label: "Email Newsletter", source: "newsletter", medium: "email" },
+  { label: "LinkedIn Ad",      source: "linkedin",   medium: "cpc"   },
+  { label: "Organic Social",   source: "instagram",  medium: "social"},
+];
+// ─────────────────────────────────────────────
+
+const APPS_SCRIPT = `// 1. Go to script.google.com → New project
+// 2. Paste this code, click Save, then Deploy → New deployment
+//    (Type: Web app, Execute as: Me, Who has access: Anyone)
+// 3. Copy the Web App URL and paste it in the Sheets tab.
+
+function doPost(e) {
+  const sheet = SpreadsheetApp.openById("YOUR_SHEET_ID").getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["Timestamp","URL","Source","Medium","Campaign","Term","Content","Full UTM"]);
+  }
+  sheet.appendRow([
+    new Date().toISOString(),
+    data.url, data.source, data.medium,
+    data.campaign, data.term, data.content, data.fullUrl
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({ success: true }))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+
+// State
+let autoSlug = true;
+let autoLog = false;
+let sheetsUrl = "";
+let history = [];
+let currentTab = "builder";
+
+// Init
+document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
+
+// Datalists
+SOURCES.forEach(v => { const o = document.createElement("option"); o.value = v; document.getElementById("dl-source").appendChild(o); });
+MEDIUMS.forEach(v => { const o = document.createElement("option"); o.value = v; document.getElementById("dl-medium").appendChild(o); });
+CAMPAIGN_PRESETS.forEach(v => { const o = document.createElement("option"); o.value = v; document.getElementById("dl-campaign").appendChild(o); });
+
+// Presets
+const presetsContainer = document.getElementById("presets-container");
+CHANNEL_PRESETS.forEach(p => {
+  const btn = document.createElement("button");
+  btn.className = "preset-btn";
+  btn.textContent = p.label;
+  btn.onclick = () => { document.getElementById("f-source").value = p.source; document.getElementById("f-medium").value = p.medium; updatePreview(); };
+  presetsContainer.appendChild(btn);
+});
+
+function slugify(str) { return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, ""); }
+function fmt(v) { return autoSlug ? slugify(v) : v; }
+
+function buildURL() {
+  const url = document.getElementById("f-url").value.trim();
+  const source = document.getElementById("f-source").value.trim();
+  const medium = document.getElementById("f-medium").value.trim();
+  const campaign = document.getElementById("f-campaign").value.trim();
+  const term = document.getElementById("f-term").value.trim();
+  const content = document.getElementById("f-content").value.trim();
+  if (!url) return { url: "", params: {}, full: "" };
+  const params = new URLSearchParams();
+  if (source) params.set("utm_source", fmt(source));
+  if (medium) params.set("utm_medium", fmt(medium));
+  if (campaign) params.set("utm_campaign", fmt(campaign));
+  if (term) params.set("utm_term", fmt(term));
+  if (content) params.set("utm_content", fmt(content));
+  const qs = params.toString();
+  const base = url.includes("?") ? url + "&" : url + "?";
+  const full = qs ? base + qs : url;
+  return { url, source, medium, campaign, term, content, params: Object.fromEntries(params), full };
+}
+
+function isValid() {
+  const url = document.getElementById("f-url").value.trim();
+  const source = document.getElementById("f-source").value.trim();
+  const medium = document.getElementById("f-medium").value.trim();
+  const campaign = document.getElementById("f-campaign").value.trim();
+  return !!(url && source && medium && campaign);
+}
+
+function updatePreview() {
+  const valid = isValid();
+  const copyBtn = document.getElementById("copy-btn");
+  copyBtn.disabled = !valid;
+
+  const { url, full } = buildURL();
+  const previewCard = document.getElementById("preview-card");
+  if (!url) { previewCard.style.display = "none"; return; }
+  previewCard.style.display = "block";
+  previewCard.className = "card" + (valid ? " valid" : "");
+
+  const label = document.getElementById("preview-label");
+  label.textContent = valid ? "✓ Generated URL" : "Preview — complete required fields";
+  label.className = "preview-label " + (valid ? "valid" : "invalid");
+
+  const preview = document.getElementById("url-preview");
+  const [base, qs] = full.split("?");
+  let html = `<span class="c-base">${base}</span>`;
+  if (qs) {
+    html += `<span class="c-sep">?</span>`;
+    qs.split("&").forEach((part, i) => {
+      const [k, v] = part.split("=");
+      if (i > 0) html += `<span class="c-sep">&</span>`;
+      html += `<span class="c-key">${k}</span><span class="c-sep">=</span><span class="c-val">${decodeURIComponent(v || "")}</span>`;
+    });
+  }
+  preview.innerHTML = html;
+}
+
+async function handleCopy() {
+  if (!isValid()) return;
+  const { url, source, medium, campaign, term, content, params, full } = buildURL();
+  navigator.clipboard.writeText(full);
+
+  const btn = document.getElementById("copy-btn");
+  btn.textContent = "✓ Copied!";
+  btn.classList.add("copied");
+  setTimeout(() => { btn.textContent = "Copy URL"; btn.classList.remove("copied"); }, 2000);
+
+  const entry = { url: full, baseUrl: url, params: { utm_source: source, utm_medium: medium, utm_campaign: campaign, utm_term: term, utm_content: content }, ts: Date.now(), logged: false };
+
+  if (sheetsUrl && autoLog) {
+    showLogStatus("loading", "Logging…");
+    const ok = await logToSheets(entry);
+    entry.logged = ok;
+    showLogStatus(ok ? "ok" : "err", ok ? "✓ Logged to Sheet" : "⚠ Sheet error");
+    setTimeout(() => document.getElementById("log-status").style.display = "none", 3000);
+  }
+
+  history.unshift(entry);
+  if (history.length > 20) history.pop();
+  updateHistoryTab();
+}
+
+function showLogStatus(type, msg) {
+  const el = document.getElementById("log-status");
+  el.style.display = "inline";
+  el.className = "log-status " + type;
+  el.textContent = msg;
+}
+
+async function logToSheets(entry) {
+  if (!sheetsUrl) return false;
+  try {
+    await fetch(sheetsUrl, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: entry.baseUrl, source: entry.params.utm_source, medium: entry.params.utm_medium, campaign: entry.params.utm_campaign, term: entry.params.utm_term || "", content: entry.params.utm_content || "", fullUrl: entry.url }),
+    });
+    return true;
+  } catch { return false; }
+}
+
+function resetForm() {
+  ["f-url","f-source","f-medium","f-campaign","f-term","f-content"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("preview-card").style.display = "none";
+  document.getElementById("copy-btn").disabled = true;
+  document.getElementById("log-status").style.display = "none";
+}
+
+function toggleSlug() {
+  autoSlug = !autoSlug;
+  const t = document.getElementById("toggle-slug");
+  t.classList.toggle("on", autoSlug);
+  updatePreview();
+}
+
+function toggleAutoLog() {
+  autoLog = !autoLog;
+  const t = document.getElementById("toggle-autolog");
+  t.classList.toggle("on", autoLog);
+}
+
+function updateHistoryTab() {
+  const el = document.getElementById("history-list");
+  const tabBtn = document.getElementById("tab-history");
+  tabBtn.textContent = history.length ? `History (${history.length})` : "History";
+
+  if (history.length === 0) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No UTMs generated yet.</div></div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="history-meta">
+      <span>${history.length} link${history.length !== 1 ? "s" : ""} this session</span>
+      <button class="btn-ghost" onclick="clearHistory()">Clear all</button>
+    </div>
+    ${history.map((item, i) => `
+      <div class="history-item" id="hitem-${i}">
+        <div class="history-info">
+          <div class="history-tags">${item.params.utm_source} / ${item.params.utm_medium} / ${item.params.utm_campaign}</div>
+          <div class="history-url">${item.url.length > 72 ? item.url.slice(0,72) + "…" : item.url}</div>
+        </div>
+        <div class="history-actions">
+          <button class="btn-mini" onclick="loadHistory(${i})">Load</button>
+          <button class="btn-mini" id="hcopy-${i}" onclick="copyHistoryItem(${i})">Copy</button>
+          ${sheetsUrl ? `<button class="btn-mini${item.logged ? " logged" : ""}" id="hlog-${i}" onclick="logHistoryItem(${i})">${item.logged ? "✓ Logged" : "→ Sheet"}</button>` : ""}
+        </div>
+      </div>
+    `).join("")}
+  `;
+}
+
+function clearHistory() { history = []; updateHistoryTab(); }
+
+function copyHistoryItem(i) {
+  navigator.clipboard.writeText(history[i].url);
+  const btn = document.getElementById(`hcopy-${i}`);
+  btn.textContent = "✓"; btn.classList.add("green");
+  setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("green"); }, 1500);
+}
+
+async function logHistoryItem(i) {
+  if (history[i].logged) return;
+  const btn = document.getElementById(`hlog-${i}`);
+  btn.textContent = "…";
+  const ok = await logToSheets(history[i]);
+  if (ok) { history[i].logged = true; btn.textContent = "✓ Logged"; btn.classList.add("logged"); }
+  else { btn.textContent = "→ Sheet"; }
+}
+
+function loadHistory(i) {
+  const item = history[i];
+  document.getElementById("f-url").value = item.baseUrl || item.url.split("?")[0];
+  document.getElementById("f-source").value = item.params.utm_source || "";
+  document.getElementById("f-medium").value = item.params.utm_medium || "";
+  document.getElementById("f-campaign").value = item.params.utm_campaign || "";
+  document.getElementById("f-term").value = item.params.utm_term || "";
+  document.getElementById("f-content").value = item.params.utm_content || "";
+  switchTab("builder");
+  updatePreview();
+}
+
+function updateSaveBtn() {
+  const val = document.getElementById("sheets-url-input").value.trim();
+  document.getElementById("save-sheets-btn").disabled = !val;
+}
+
+function saveSheets() {
+  sheetsUrl = document.getElementById("sheets-url-input").value.trim();
+  const btn = document.getElementById("save-sheets-btn");
+  const connected = document.getElementById("sheets-connected");
+  const sheetTab = document.getElementById("tab-sheets");
+  btn.textContent = "✓ Saved!";
+  connected.style.display = "flex";
+  sheetTab.textContent = "Sheets ✓";
+  document.getElementById("autolog-row").style.display = "flex";
+  setTimeout(() => { btn.textContent = "Save & Connect"; }, 2000);
+  updateHistoryTab();
+}
+
+function copyScript() {
+  navigator.clipboard.writeText(APPS_SCRIPT);
+  const btn = document.getElementById("copy-script-btn");
+  btn.textContent = "✓ Copied"; btn.classList.add("copied");
+  setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 2000);
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll(".tab-btn").forEach((btn, i) => {
+    const tabs = ["builder","history","sheets"];
+    btn.classList.toggle("active", tabs[i] === tab);
+  });
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("panel-" + tab).classList.add("active");
+  if (tab === "history") updateHistoryTab();
+}
+
+// Initial render
+updateHistoryTab();
+</script>
+</body>
+</html>
