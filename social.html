@@ -199,17 +199,19 @@
 // ─────────────────────────────────────────────
 // CUSTOMIZE YOUR PRESETS HERE
 // ─────────────────────────────────────────────
-const SOURCES = ["adhoc", "newsletter", "automation"];
-const MEDIUMS = ["email"];
+const SOURCES = ["facebook", "instagram", "tiktok", "youtube", "fbstories", "igstories", "igbio", "fbevent"];
+const MEDIUMS = ["social"];
 const CAMPAIGN_PRESETS = [
   { label: "Brand Awareness", campaign: "brandawareness" },
   { label: "Entertainment",   campaign: "entertainment"  },
   { label: "Gaming",          campaign: "gaming"         },
   { label: "Hotel",           campaign: "hotel"          },
-  { label: "Wild Card",       campaign: "wildcard"       }
+  { label: "Wild Card",       campaign: "wildcard"       },
+  { label: "Golf",            campaign: "golf"           },
+  { label: "Amenities",       campaign: "amenities"      }
 ];
 const CHANNEL_PRESETS = [
-  { label: "Adhoc",      source: "adhoc",      medium: "email" },
+  { label: "Facebook Links",      source: "facebook", medium: "social", content: "link" },
   { label: "Newsletter", source: "newsletter", medium: "email" },
   { label: "Automation", source: "automation", medium: "email" }
 ];
