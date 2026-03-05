@@ -242,7 +242,7 @@ CHANNEL_PRESETS.forEach(function(p) {
   var btn = document.createElement("button");
   btn.className = "preset-btn";
   btn.textContent = p.label;
-  btn.onclick = function() { document.getElementById("f-source").value = p.source; document.getElementById("f-medium").value = p.medium; updatePreview(); };
+  btn.onclick = function() { document.getElementById("f-source").value = p.source; document.getElementById("f-medium").value = p.medium; document.getElementById("f-content").value = p.content; updatePreview(); };
   document.getElementById("presets-container").appendChild(btn);
 });
 
