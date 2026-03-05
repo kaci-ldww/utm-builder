@@ -112,13 +112,13 @@
           <label>Source *</label>
           <input type="text" id="f-source" placeholder="adhoc" list="dl-source" oninput="updatePreview()" />
           <datalist id="dl-source"></datalist>
-          <div class="hint">e.g. adhoc, newsletter</div>
+          <div class="hint">e.g. facebook, instagram</div>
         </div>
         <div class="field">
           <label>Medium *</label>
           <input type="text" id="f-medium" placeholder="email" list="dl-medium" oninput="updatePreview()" />
           <datalist id="dl-medium"></datalist>
-          <div class="hint">e.g. email</div>
+          <div class="hint">e.g. social</div>
         </div>
       </div>
       <div class="field">
@@ -129,7 +129,7 @@
         <div class="field">
           <label>Content</label>
           <input type="text" id="f-content" placeholder="optional" oninput="updatePreview()" />
-          <div class="hint">email name</div>
+          <div class="hint">type of content</div>
         </div>
       <div class="field">
         <label>Term</label>
@@ -211,8 +211,15 @@ const CAMPAIGN_PRESETS = [
   { label: "Amenities",       campaign: "amenities"      }
 ];
 const CHANNEL_PRESETS = [
-  { label: "Facebook Links",      source: "facebook", medium: "social", content: "link" },
-  { label: "Newsletter", source: "newsletter", medium: "email" },
+  { label: "FB Artist Announcement",              source: "facebook", medium: "social", content: "announcement" },
+  { label: "FB Stories Artist Announcement",      source: "fbstories", medium: "social", content: "announcement" },
+  { label: "IG Artist Announcement",              source: "instagram", medium: "social", content: "announcement" },
+  { label: "IG Stories Artist Announcement",      source: "igstories", medium: "social", content: "announcement" },
+  { label: "FB Artist On Sale",                   source: "facebook", medium: "social", content: "onsale" },
+  { label: "FB Stories Artist On Sale",           source: "fbstories", medium: "social", content: "onsale" },
+  { label: "IG Artist On Sale",                   source: "instagram", medium: "social", content: "onsale" },
+  { label: "IG Stories Artist On Sale",           source: "igstories", medium: "social", content: "onsale" },
+  { label: "Facebook Photos",     source: "newsletter", medium: "email", content: "photo" },
   { label: "Automation", source: "automation", medium: "email" }
 ];
 // ─────────────────────────────────────────────
