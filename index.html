@@ -126,17 +126,16 @@
         <input type="text" id="f-campaign" placeholder="brandawareness" list="dl-campaign" oninput="updatePreview()" />
         <datalist id="dl-campaign"></datalist>
         <div class="hint">e.g. brandawareness, gaming</div>
-      </div>
-      <div class="grid-2">
-        <div class="field">
-          <label for="Term">Term dropdown:</label>
-              <select id="fruits" name="fruits">
-                <option value="cunderwood">Carrie Underwood</option>
-                <option value="jaldean">Jason Aldean</option>
-            </select>
-          <input type="text" id="f-term" placeholder="optional" oninput="updatePreview()" />
-          <div class="hint">Artist Content</div>
-        </div>
+      <div class="field">
+        <label>Term</label>
+        <select onchange="document.getElementById('f-term').value = this.value; updatePreview();" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#e2e8f0; font-size:13px; padding:9px 12px; outline:none; font-family:'DM Mono',monospace; margin-bottom:6px;">
+        <option value="">-- Select artist --</option>
+        <option value="cunderwood">Carrie Underwood</option>
+        <option value="jaldean">Jason Aldean</option>
+      </select>
+      <input type="text" id="f-term" placeholder="or type manually" oninput="updatePreview()" />
+  <div class="hint">Artist Content</div>
+</div>
         <div class="field">
           <label>Content</label>
           <input type="text" id="f-content" placeholder="optional" oninput="updatePreview()" />
