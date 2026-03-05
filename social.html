@@ -38,6 +38,8 @@
     input[type="text"], input[type="url"] { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none; font-family: 'DM Mono', monospace; transition: border-color 0.15s; }
     input[type="text"]:focus, input[type="url"]:focus { border-color: #6366f1; }
     input.sans { font-family: 'DM Sans', sans-serif; }
+    select.styled { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none; font-family: 'DM Mono', monospace; margin-bottom: 6px; transition: border-color 0.15s; }
+    select.styled:focus { border-color: #6366f1; }
     .toggle-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
     .toggle { width: 36px; height: 20px; background: #1e293b; border-radius: 10px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
     .toggle.on { background: #6366f1; }
@@ -97,53 +99,74 @@
   </div>
 
   <div id="panel-builder" class="panel active">
+
+    <!-- Campaign preset buttons -->
     <div class="presets-label">Campaign</div>
-    <div class="presets-row" id="campaign-presets-container"></div>  
+    <div class="presets-row" id="campaign-presets-container"></div>
+
+    <!-- Post Type / Source preset buttons -->
     <div class="presets-label">Post Type</div>
     <div class="presets-row" id="presets-container"></div>
+
     <div class="card">
+
+      <!-- Destination URL -->
       <div class="field">
         <label>Destination URL *</label>
         <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
       </div>
-    <div class="field">
-       <label>Source *</label>
-      <input type="text" id="f-source" placeholder="facebook" list="dl-source" oninput="updatePreview()" />
-      <datalist id="dl-source"></datalist>
-      <div class="hint">e.g. facebook, instagram</div>
-  </div>
-<div class="field">
-  <label>Medium *</label>
-  <input type="text" id="f-medium" value="social" oninput="updatePreview()" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#e2e8f0; font-size:13px; padding:9px 12px; outline:none; font-family:'DM Mono',monospace;" />
-</div>
+
+      <!-- Source + Medium side by side -->
+      <div class="grid-2">
+        <div class="field">
+          <label>Source *</label>
+          <input type="text" id="f-source" placeholder="facebook" list="dl-source" oninput="updatePreview()" />
+          <datalist id="dl-source"></datalist>
+          <div class="hint">e.g. facebook, instagram</div>
+        </div>
+        <div class="field">
+          <label>Medium *</label>
+          <input type="text" id="f-medium" value="social" oninput="updatePreview()" />
+          <div class="hint">Pre-filled as social</div>
+        </div>
       </div>
+
+      <!-- Campaign -->
       <div class="field">
         <label>Campaign *</label>
         <input type="text" id="f-campaign" placeholder="brandawareness" list="dl-campaign" oninput="updatePreview()" />
         <datalist id="dl-campaign"></datalist>
         <div class="hint">e.g. brandawareness, gaming</div>
+      </div>
+
+      <!-- Content dropdown + manual -->
       <div class="field">
         <label>Content</label>
-         <select id="content-select" onchange="applyContentPreset(this.value)" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#e2e8f0; font-size:13px; padding:9px 12px; outline:none; font-family:'DM Mono',monospace; margin-bottom:6px;">
-        <option value="">-- Select content --</option>
-      </select>
-  <input type="text" id="f-content" placeholder="or type manually" oninput="updatePreview()" />
-</div>
-        <div class="field">
-          <label>Term/Identifier</label>
-          <input type="text" id="f-content" placeholder="optional" oninput="updatePreview()" />
-          <div class="hint">type of content</div>
-        </div>
+        <select id="content-select" class="styled" onchange="applyContentPreset(this.value)">
+          <option value="">-- Select content --</option>
+        </select>
+        <input type="text" id="f-content" placeholder="or type manually" oninput="updatePreview()" />
+        <div class="hint">Fills content + term</div>
+      </div>
+
+      <!-- Term (filled by content dropdown or manually) -->
+      <div class="field">
+        <label>Term / Identifier</label>
+        <input type="text" id="f-term" placeholder="optional" oninput="updatePreview()" />
+        <div class="hint">Type of content</div>
+      </div>
+
+      <!-- Artist dropdown + manual -->
       <div class="field">
         <label>Other Identifiers</label>
-        <select id="artist-select" onchange="document.getElementById('f-term').value = this.value; updatePreview();" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#e2e8f0; font-size:13px; padding:9px 12px; outline:none; font-family:'DM Mono',monospace; margin-bottom:6px;">
-        <option value="">Loading artists...</option>
+        <select id="artist-select" class="styled" onchange="document.getElementById('f-term').value = this.value; updatePreview();">
+          <option value="">Loading artists...</option>
         </select>
-      <input type="text" id="f-term" placeholder="or type manually" oninput="updatePreview()" />
-  <div class="hint">Artist Content</div>
-</div>
+        <div class="hint">Artist content — overwrites Term above</div>
       </div>
-      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+
+      <!-- Toggles -->
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:4px;">
         <div class="toggle-row">
           <div class="toggle on" id="toggle-slug" onclick="toggleSlug()"><div class="toggle-knob"></div></div>
           <span class="toggle-label">Auto-format (lowercase + hyphens)</span>
@@ -153,24 +176,30 @@
           <span class="toggle-label">Auto-log to Sheets on copy</span>
         </div>
       </div>
-    </div>
 
+    </div><!-- end .card -->
+
+    <!-- URL Preview -->
     <div class="card" id="preview-card" style="display:none">
       <div class="preview-label" id="preview-label"></div>
       <div class="url-preview" id="url-preview"></div>
     </div>
 
+    <!-- Actions -->
     <div class="actions">
       <button class="btn-primary" id="copy-btn" onclick="handleCopy()" disabled>Copy URL</button>
       <span class="log-status" id="log-status" style="display:none"></span>
       <button class="btn-secondary" onclick="resetForm()">Reset</button>
     </div>
-  </div>
 
+  </div><!-- end panel-builder -->
+
+  <!-- HISTORY -->
   <div id="panel-history" class="panel">
     <div id="history-list"></div>
   </div>
 
+  <!-- SHEETS -->
   <div id="panel-sheets" class="panel">
     <div class="card">
       <div style="font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:4px;">Connect Google Sheets</div>
@@ -196,12 +225,10 @@
       <div class="sheets-connected" id="sheets-connected" style="display:none">&#10003; Connected</div>
     </div>
   </div>
-</div>
+
+</div><!-- end #app -->
 
 <script>
-// ─────────────────────────────────────────────
-// CUSTOMIZE YOUR PRESETS HERE
-// ─────────────────────────────────────────────
 // ─────────────────────────────────────────────
 // CUSTOMIZE YOUR PRESETS HERE
 // ─────────────────────────────────────────────
@@ -217,20 +244,18 @@ const CAMPAIGN_PRESETS = [
   { label: "Amenities",       campaign: "amenities"      }
 ];
 const CHANNEL_PRESETS = [
-  { label: "Facebook",   source: "facebook"   },
-  { label: "Instagram",  source: "instagram"  },
-  { label: "TikTok",     source: "tiktok"     },
-  { label: "YouTube",    source: "youtube"    },
-  { label: "FB Stories", source: "fbstories"  },
-  { label: "IG Stories", source: "igstories"  },
-  { label: "IG Bio",     source: "igbio"      },
-  { label: "FB Event",   source: "fbevent"    }
+  { label: "Facebook",   source: "facebook"  },
+  { label: "Instagram",  source: "instagram" },
+  { label: "TikTok",     source: "tiktok"    },
+  { label: "YouTube",    source: "youtube"   },
+  { label: "FB Stories", source: "fbstories" },
+  { label: "IG Stories", source: "igstories" },
+  { label: "IG Bio",     source: "igbio"     },
+  { label: "FB Event",   source: "fbevent"   }
 ];
 const CONTENT_PRESETS = [
   // { label: "Display Name", content: "utm-content-value", term: "utm-term-value" },
-  // Add your options here!
 ];
-// ─────────────────────────────────────────────
 // ─────────────────────────────────────────────
 
 const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Term\",\"Content\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.url, data.source, data.medium, data.campaign, data.term, data.content, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
@@ -243,7 +268,7 @@ document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
 SOURCES.forEach(function(v) { var o = document.createElement("option"); o.value = v; document.getElementById("dl-source").appendChild(o); });
 CAMPAIGN_PRESETS.forEach(function(p) { var o = document.createElement("option"); o.value = p.campaign; document.getElementById("dl-campaign").appendChild(o); });
 
-// Campaign preset buttons (blue tint)
+// Campaign preset buttons
 CAMPAIGN_PRESETS.forEach(function(p) {
   var btn = document.createElement("button");
   btn.className = "preset-btn campaign";
@@ -251,17 +276,13 @@ CAMPAIGN_PRESETS.forEach(function(p) {
   btn.onclick = function() { document.getElementById("f-campaign").value = p.campaign; updatePreview(); };
   document.getElementById("campaign-presets-container").appendChild(btn);
 });
-  
-  // Source preset buttons (purple tint)
-// Source preset buttons
+
+// Source (Post Type) preset buttons
 CHANNEL_PRESETS.forEach(function(p) {
   var btn = document.createElement("button");
   btn.className = "preset-btn";
   btn.textContent = p.label;
-  btn.onclick = function() {
-    document.getElementById("f-source").value = p.source;
-    updatePreview();
-  };
+  btn.onclick = function() { document.getElementById("f-source").value = p.source; updatePreview(); };
   document.getElementById("presets-container").appendChild(btn);
 });
 
@@ -286,12 +307,12 @@ function fmt(v) { return autoSlug ? slugify(v) : v; }
 
 function getFields() {
   return {
-    url: document.getElementById("f-url").value.trim(),
-    source: document.getElementById("f-source").value.trim(),
-    medium: document.getElementById("f-medium").value.trim(),
+    url:      document.getElementById("f-url").value.trim(),
+    source:   document.getElementById("f-source").value.trim(),
+    medium:   document.getElementById("f-medium").value.trim(),
     campaign: document.getElementById("f-campaign").value.trim(),
-    term: document.getElementById("f-term").value.trim(),
-    content: document.getElementById("f-content").value.trim()
+    term:     document.getElementById("f-term").value.trim(),
+    content:  document.getElementById("f-content").value.trim()
   };
 }
 
@@ -299,11 +320,11 @@ function buildURL() {
   var f = getFields();
   if (!f.url) return { url: "", full: "", params: {} };
   var params = new URLSearchParams();
-  if (f.source) params.set("utm_source", fmt(f.source));
-  if (f.medium) params.set("utm_medium", fmt(f.medium));
+  if (f.source)   params.set("utm_source",   fmt(f.source));
+  if (f.medium)   params.set("utm_medium",   fmt(f.medium));
   if (f.campaign) params.set("utm_campaign", fmt(f.campaign));
-  if (f.term) params.set("utm_term", fmt(f.term));
-  if (f.content) params.set("utm_content", fmt(f.content));
+  if (f.term)     params.set("utm_term",     fmt(f.term));
+  if (f.content)  params.set("utm_content",  fmt(f.content));
   var qs = params.toString();
   var base = f.url.includes("?") ? f.url + "&" : f.url + "?";
   return { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, term: f.term, content: f.content, params: Object.fromEntries(params), full: qs ? base + qs : f.url };
@@ -374,6 +395,9 @@ async function logToSheets(entry) {
 
 function resetForm() {
   ["f-url","f-source","f-medium","f-campaign","f-term","f-content"].forEach(function(id) { document.getElementById(id).value = ""; });
+  document.getElementById("f-medium").value = "social";
+  document.getElementById("content-select").value = "";
+  document.getElementById("artist-select").value = "";
   document.getElementById("preview-card").style.display = "none";
   document.getElementById("copy-btn").disabled = true;
   document.getElementById("log-status").style.display = "none";
@@ -419,7 +443,7 @@ function loadHistory(i) {
   var item = history[i];
   document.getElementById("f-url").value = item.baseUrl || item.url.split("?")[0];
   document.getElementById("f-source").value = item.params.utm_source || "";
-  document.getElementById("f-medium").value = item.params.utm_medium || "";
+  document.getElementById("f-medium").value = item.params.utm_medium || "social";
   document.getElementById("f-campaign").value = item.params.utm_campaign || "";
   document.getElementById("f-term").value = item.params.utm_term || "";
   document.getElementById("f-content").value = item.params.utm_content || "";
@@ -452,11 +476,12 @@ function switchTab(tab) {
   if (tab === "history") updateHistoryTab();
 }
 
+// Load artists from Google Sheet
 fetch("https://script.google.com/macros/s/AKfycbzy3lCltzDdM3mWkCWS8M5jvhdtQDb0vWq9Msu9fX6tQubO4yY7fWSB0ohIcv1O2q4alA/exec", {
   method: "GET",
   mode: "cors"
 })
-  .then(r => r.json())
+  .then(function(r) { return r.json(); })
   .then(function(artists) {
     var select = document.getElementById("artist-select");
     select.innerHTML = '<option value="">-- Select artist --</option>';
@@ -471,7 +496,7 @@ fetch("https://script.google.com/macros/s/AKfycbzy3lCltzDdM3mWkCWS8M5jvhdtQDb0vW
     console.log("Artist load error:", err);
     document.getElementById("artist-select").innerHTML = '<option value="">Could not load artists</option>';
   });
-  
+
 updateHistoryTab();
 </script>
 </body>
