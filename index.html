@@ -225,18 +225,21 @@
 // ─────────────────────────────────────────────
 // ✏️  CUSTOMIZE YOUR PRESETS HERE
 // ─────────────────────────────────────────────
-const SOURCES = ["google","facebook","instagram","linkedin","twitter","email","newsletter","bing","youtube","tiktok","reddit","pinterest"];
-const MEDIUMS = ["cpc","email","social","organic","referral","display","video","affiliate","sms","push"];
-const CAMPAIGN_PRESETS = ["brand-awareness","retargeting","lead-gen","product-launch","seasonal-promo","onboarding"];
+const SOURCES = ["adhoc","newsletter","automation"];
+const MEDIUMS = ["email"];
+const CAMPAIGN_PRESETS = [
+  { label: "Brand Awareness", campaign: "brandawareness"},
+  { label: "Entertainment", campaign: "entertainment"},
+  { label: "Gaming", campaign: "gaming"},
+  { label: "Hotel", campaign: "hotel"},
+  { label: "Wild Card" campaign: "wildcard"];
 const CHANNEL_PRESETS = [
-  { label: "Google Ads",       source: "google",     medium: "cpc"   },
-  { label: "Facebook Ad",      source: "facebook",   medium: "cpc"   },
-  { label: "Instagram Ad",     source: "instagram",  medium: "cpc"   },
-  { label: "Email Newsletter", source: "newsletter", medium: "email" },
-  { label: "LinkedIn Ad",      source: "linkedin",   medium: "cpc"   },
-  { label: "Organic Social",   source: "instagram",  medium: "social"},
+  { label: "Adhoc",       source: "adhoc",     medium: "email"   },
+  { label: "Newsletter",      source: "newsletter",   medium: "email"   },
+  { label: "Automation",     source: "automation",  medium: "email"   },
 ];
-// ─────────────────────────────────────────────
+  
+  // ─────────────────────────────────────────────
 
 const APPS_SCRIPT = `// 1. Go to script.google.com → New project
 // 2. Paste this code, click Save, then Deploy → New deployment
