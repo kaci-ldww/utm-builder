@@ -97,11 +97,10 @@
   </div>
 
   <div id="panel-builder" class="panel active">
-    <div class="presets-label">Source</div>
-    <div class="presets-row" id="presets-container"></div>
     <div class="presets-label">Campaign</div>
-    <div class="presets-row" id="campaign-presets-container"></div>
-
+    <div class="presets-row" id="campaign-presets-container"></div>  
+    <div class="presets-label">Post Type</div>
+    <div class="presets-row" id="presets-container"></div>
     <div class="card">
       <div class="field">
         <label>Destination URL *</label>
@@ -115,22 +114,20 @@
           <div class="hint">e.g. facebook, instagram</div>
         </div>
         <div class="field">
-          <label>Medium *</label>
-          <input type="text" id="f-medium" placeholder="email" list="dl-medium" oninput="updatePreview()" />
-          <datalist id="dl-medium"></datalist>
-          <div class="hint">e.g. social</div>
-        </div>
+      <input type="hidden" id="f-medium" value="social" />
       </div>
       <div class="field">
         <label>Campaign *</label>
         <input type="text" id="f-campaign" placeholder="brandawareness" list="dl-campaign" oninput="updatePreview()" />
         <datalist id="dl-campaign"></datalist>
         <div class="hint">e.g. brandawareness, gaming</div>
-        <div class="field">
-          <label>Content</label>
-          <input type="text" id="f-content" placeholder="optional" oninput="updatePreview()" />
-          <div class="hint">secondary campaign level</div>
-        </div>
+      <div class="field">
+        <label>Content</label>
+         <select id="content-select" onchange="applyContentPreset(this.value)" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:8px; color:#e2e8f0; font-size:13px; padding:9px 12px; outline:none; font-family:'DM Mono',monospace; margin-bottom:6px;">
+        <option value="">-- Select content --</option>
+      </select>
+  <input type="text" id="f-content" placeholder="or type manually" oninput="updatePreview()" />
+</div>
         <div class="field">
           <label>Term/Identifier</label>
           <input type="text" id="f-content" placeholder="optional" oninput="updatePreview()" />
@@ -204,6 +201,9 @@
 // ─────────────────────────────────────────────
 // CUSTOMIZE YOUR PRESETS HERE
 // ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// CUSTOMIZE YOUR PRESETS HERE
+// ─────────────────────────────────────────────
 const SOURCES = ["facebook", "instagram", "tiktok", "youtube", "fbstories", "igstories", "igbio", "fbevent"];
 const MEDIUMS = ["social"];
 const CAMPAIGN_PRESETS = [
@@ -216,17 +216,20 @@ const CAMPAIGN_PRESETS = [
   { label: "Amenities",       campaign: "amenities"      }
 ];
 const CHANNEL_PRESETS = [
-  { label: "FB Artist Announcement",              source: "facebook", medium: "social", content: "announcement" },
-  { label: "FB Stories Artist Announcement",      source: "fbstories", medium: "social", content: "announcement" },
-  { label: "IG Artist Announcement",              source: "instagram", medium: "social", content: "announcement" },
-  { label: "IG Stories Artist Announcement",      source: "igstories", medium: "social", content: "announcement" },
-  { label: "FB Artist On Sale",                   source: "facebook", medium: "social", content: "onsale" },
-  { label: "FB Stories Artist On Sale",           source: "fbstories", medium: "social", content: "onsale" },
-  { label: "IG Artist On Sale",                   source: "instagram", medium: "social", content: "onsale" },
-  { label: "IG Stories Artist On Sale",           source: "igstories", medium: "social", content: "onsale" },
-  { label: "Facebook Photos",     source: "newsletter", medium: "email", content: "photo" },
-  { label: "Automation", source: "automation", medium: "email" }
+  { label: "Facebook",   source: "facebook"   },
+  { label: "Instagram",  source: "instagram"  },
+  { label: "TikTok",     source: "tiktok"     },
+  { label: "YouTube",    source: "youtube"    },
+  { label: "FB Stories", source: "fbstories"  },
+  { label: "IG Stories", source: "igstories"  },
+  { label: "IG Bio",     source: "igbio"      },
+  { label: "FB Event",   source: "fbevent"    }
 ];
+const CONTENT_PRESETS = [
+  // { label: "Display Name", content: "utm-content-value", term: "utm-term-value" },
+  // Add your options here!
+];
+// ─────────────────────────────────────────────
 // ─────────────────────────────────────────────
 
 const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Term\",\"Content\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.url, data.source, data.medium, data.campaign, data.term, data.content, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
@@ -237,7 +240,6 @@ document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
 
 // Populate datalists
 SOURCES.forEach(function(v) { var o = document.createElement("option"); o.value = v; document.getElementById("dl-source").appendChild(o); });
-MEDIUMS.forEach(function(v) { var o = document.createElement("option"); o.value = v; document.getElementById("dl-medium").appendChild(o); });
 CAMPAIGN_PRESETS.forEach(function(p) { var o = document.createElement("option"); o.value = p.campaign; document.getElementById("dl-campaign").appendChild(o); });
 
 // Campaign preset buttons (blue tint)
@@ -250,13 +252,33 @@ CAMPAIGN_PRESETS.forEach(function(p) {
 });
   
   // Source preset buttons (purple tint)
+// Source preset buttons
 CHANNEL_PRESETS.forEach(function(p) {
   var btn = document.createElement("button");
   btn.className = "preset-btn";
   btn.textContent = p.label;
-  btn.onclick = function() { document.getElementById("f-source").value = p.source; document.getElementById("f-medium").value = p.medium; document.getElementById("f-content").value = p.content; updatePreview(); };
+  btn.onclick = function() {
+    document.getElementById("f-source").value = p.source;
+    updatePreview();
+  };
   document.getElementById("presets-container").appendChild(btn);
 });
+
+// Content preset dropdown
+CONTENT_PRESETS.forEach(function(p) {
+  var opt = document.createElement("option");
+  opt.value = p.label;
+  opt.textContent = p.label;
+  document.getElementById("content-select").appendChild(opt);
+});
+
+function applyContentPreset(label) {
+  var preset = CONTENT_PRESETS.find(function(p) { return p.label === label; });
+  if (!preset) return;
+  document.getElementById("f-content").value = preset.content;
+  document.getElementById("f-term").value = preset.term;
+  updatePreview();
+}
 
 function slugify(str) { return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, ""); }
 function fmt(v) { return autoSlug ? slugify(v) : v; }
