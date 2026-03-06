@@ -579,11 +579,23 @@ function copyEmailName() {
 }
 
 function useEmailName() {
-  var name = document.getElementById("en-preview").textContent;
-  if (!name || document.getElementById("en-preview").classList.contains("empty")) return;
-  document.getElementById("f-content").value = name;
+  var preview = document.getElementById("en-preview");
+  if (!preview || preview.classList.contains("empty")) return;
+
+  // Map each email name part to its UTM field
+  if (en.driver)    document.getElementById("f-campaign").value = en.driver;
+  if (en.emailType) document.getElementById("f-source").value   = en.emailType;
+  if (en.content)   document.getElementById("f-content").value  = en.content;
+
+  // description + type2 joined by underscore → term
+  var termParts = [en.desc, en.type2].filter(function(p) { return p && p.trim() !== ""; });
+  document.getElementById("f-term").value = termParts.join("_");
+
+  // Also update the campaign dynamic buttons (so term buttons refresh)
+  updateCampaignDynamic();
   updatePreview();
-  // Smooth scroll down to UTM form
+
+  // Scroll down to UTM form
   document.getElementById("f-url").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
