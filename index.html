@@ -173,20 +173,16 @@
         <div class="btn-row" id="en-desc-btns"><span class="empty-hint">Select a business driver first</span></div>
       </div>
 
-      <div class="section">
+      <!-- Email Type 2 — dynamic, hidden until driver selected -->
+      <div class="section" id="type2-section" style="display:none">
         <div class="section-label">Email Type 2 <span>optional</span></div>
-        <div class="btn-row">
-          <button class="preset-btn type2-btn" onclick="toggleType2(this,'newmember')">newmember</button>
-          <button class="preset-btn type2-btn" onclick="toggleType2(this,'uncarded')">uncarded</button>
-          <button class="preset-btn type2-btn" onclick="toggleType2(this,'carded')">carded</button>
-          <button class="preset-btn type2-btn" onclick="toggleType2(this,'couples')">couples</button>
-        </div>
+        <div class="btn-row" id="type2-btns"></div>
       </div>
 
-    <div class="section">
-      <div class="section-label">Date <span>MMDDYYYY</span></div>
-      <input type="text" id="en-month" placeholder="MMDDYYYY" maxlength="8" oninput="buildEmailName()" style="max-width:160px;" />
-    </div>
+      <div class="section">
+        <div class="section-label">Date <span>MMDDYYYY</span></div>
+        <input type="text" id="en-month" placeholder="MMDDYYYY" maxlength="8" oninput="buildEmailName()" style="max-width:160px;" />
+      </div>
 
       <div class="name-preview-wrap">
         <div class="name-preview-label">Generated Email Name</div>
@@ -299,35 +295,41 @@
 // CONFIG
 // ─────────────────────────────────────────────
 const DRIVERS = [
-  { label: "Entertainment", code: "ent"     },
-  { label: "Gaming",        code: "gaming"  },
-  { label: "Brand Awareness",    code: "brandawareness" },
-  { label: "Amenities",         code: "amenities"   },
-  { label: "Golf",          code: "golf"    }
+  { label: "Entertainment",   code: "ent"            },
+  { label: "Gaming",          code: "gaming"         },
+  { label: "Brand Awareness", code: "brandawareness" },
+  { label: "Amenities",       code: "amenities"      },
+  { label: "Golf",            code: "golf"           }
 ];
 
 const EN_CONTENT_BY_DRIVER = {
-  ent:     ["presale","onsale","ticketpush_genre","ticketpush_hotel","ttgt","postshow","bogo","rescheduled","canceled","giveaway"],
-  gaming:  ["promotion","mywinstar","clubpassport"],
+  ent:            ["presale","onsale","ticketpush_genre","ticketpush_hotel","ttgt","postshow","bogo","rescheduled","canceled","giveaway"],
+  gaming:         ["promotion","mywinstar","clubpassport"],
   brandawareness: ["reengagement","gozone","welcome","giveaway"],
-  amenities:   ["hotel","spa","pool","dining","meet"],
-  golf:    ["instruction","retailpackage","membership","tournaments"]
+  amenities:      ["hotel","spa","pool","dining","meet"],
+  golf:           ["instruction","retailpackage","membership","tournaments"]
 };
 
 const EN_DESC_BY_DRIVER = {
   // ent uses artist dropdown from sheet
-  gaming:  ["membership","awareness"],
+  gaming:         ["membership","awareness"],
   brandawareness: ["reengagement1","reengagement2","reengagement3"],
-  amenities:   ["retailpackage","conventions","weddings","catering","prestay1","prestay2"],
-  golf:    ["email1","email2","email3"]
+  amenities:      ["retailpackage","conventions","weddings","catering","prestay1","prestay2"],
+  golf:           ["email1","email2","email3"]
+};
+
+// Dynamic Email Type 2 options per driver — omitted drivers show nothing
+const TYPE2_BY_DRIVER = {
+  gaming:   ["newmember","uncarded","carded"],
+  amenities: ["couples"]
 };
 
 const DRIVER_TO_CAMPAIGN = {
-  ent:     "entertainment",
-  gaming:  "gaming",
+  ent:            "entertainment",
+  gaming:         "gaming",
   brandawareness: "brandawareness",
-  amenities:   "hotel",
-  golf:    "golf"
+  amenities:      "hotel",
+  golf:           "golf"
 };
 // ─────────────────────────────────────────────
 
@@ -340,9 +342,6 @@ let en = { driver: "", emailType: "", content: "", desc: "", type2: "", month: "
 
 document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
 
-// ── MONTH DROPDOWN ────────────────────────────
-
-
 // ── DRIVER BUTTONS ────────────────────────────
 DRIVERS.forEach(function(d) {
   var btn = document.createElement("button");
@@ -353,8 +352,10 @@ DRIVERS.forEach(function(d) {
     en.driver = d.code;
     en.content = "";
     en.desc = "";
+    en.type2 = "";
     renderEnContentBtns(d.code);
     renderEnDescBtns(d.code);
+    renderType2Btns(d.code);
     buildEmailName();
   };
   document.getElementById("driver-btns").appendChild(btn);
@@ -397,10 +398,7 @@ function renderEnDescBtns(driver) {
       opt.textContent = a.name;
       sel.appendChild(opt);
     });
-    sel.onchange = function() {
-      en.desc = this.value;
-      buildEmailName();
-    };
+    sel.onchange = function() { en.desc = this.value; buildEmailName(); };
     container.appendChild(sel);
     return;
   }
@@ -420,21 +418,36 @@ function renderEnDescBtns(driver) {
   });
 }
 
+function renderType2Btns(driver) {
+  var section = document.getElementById("type2-section");
+  var container = document.getElementById("type2-btns");
+  var options = TYPE2_BY_DRIVER[driver] || [];
+  en.type2 = "";
+  container.innerHTML = "";
+  if (!options.length) { section.style.display = "none"; return; }
+  section.style.display = "block";
+  options.forEach(function(val) {
+    var btn = document.createElement("button");
+    btn.className = "preset-btn type2-btn";
+    btn.textContent = val;
+    btn.onclick = function() {
+      if (en.type2 === val) {
+        btn.classList.remove("active-sel");
+        en.type2 = "";
+      } else {
+        container.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
+        btn.classList.add("active-sel");
+        en.type2 = val;
+      }
+      buildEmailName();
+    };
+    container.appendChild(btn);
+  });
+}
+
 function setEmailType(btn, val) {
   setActive2(btn, ".emailtype-btn");
   en.emailType = val;
-  buildEmailName();
-}
-
-function toggleType2(btn, val) {
-  if (en.type2 === val) {
-    btn.classList.remove("active-sel");
-    en.type2 = "";
-  } else {
-    document.querySelectorAll(".type2-btn").forEach(function(b) { b.classList.remove("active-sel"); });
-    btn.classList.add("active-sel");
-    en.type2 = val;
-  }
   buildEmailName();
 }
 
@@ -445,15 +458,18 @@ function setActive2(btn, selector) {
 
 function buildEmailName() {
   en.month = document.getElementById("en-month").value;
-  var parts = [en.driver, en.emailType, en.content, en.desc];
+  // Always prefix with ws_
+  var parts = ["ws", en.driver, en.emailType, en.content, en.desc];
   if (en.type2) parts.push(en.type2);
   parts.push(en.month);
+  // Filter out empty parts except the leading "ws"
   var filtered = parts.filter(function(p) { return p && p.trim() !== ""; });
   var name = filtered.join("_");
   var preview = document.getElementById("en-preview");
   var copyBtn = document.getElementById("en-copy-btn");
   var useBtn = document.getElementById("en-use-btn");
-  if (name) {
+  // Only show as valid if there's more than just "ws"
+  if (filtered.length > 1) {
     preview.textContent = name;
     preview.classList.remove("empty");
     copyBtn.disabled = false;
@@ -479,12 +495,10 @@ function useEmailName() {
   var preview = document.getElementById("en-preview");
   if (!preview || preview.classList.contains("empty")) return;
 
-  // Push each field individually — no updateCampaignDynamic() call here since there are no term buttons
   if (en.driver)    document.getElementById("f-campaign").value = DRIVER_TO_CAMPAIGN[en.driver] || en.driver;
   if (en.emailType) document.getElementById("f-source").value   = en.emailType;
   if (en.content)   document.getElementById("f-content").value  = en.content;
 
-  // description + type2 joined by underscore → term
   var termParts = [en.desc, en.type2].filter(function(p) { return p && p.trim() !== ""; });
   document.getElementById("f-term").value = termParts.join("_");
 
@@ -585,10 +599,13 @@ async function logToSheets(entry) {
 }
 
 function resetForm() {
-  en = { driver: "", emailType: "", content: "", desc: "", type2: "", month: document.getElementById("en-month").value };
+  en = { driver: "", emailType: "", content: "", desc: "", type2: "", month: "" };
   document.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
   document.getElementById("en-content-btns").innerHTML = '<span class="empty-hint">Select a business driver first</span>';
   document.getElementById("en-desc-btns").innerHTML = '<span class="empty-hint">Select a business driver first</span>';
+  document.getElementById("type2-section").style.display = "none";
+  document.getElementById("type2-btns").innerHTML = "";
+  document.getElementById("en-month").value = "";
   document.getElementById("en-preview").textContent = "Fill in the fields above to generate your email name";
   document.getElementById("en-preview").classList.add("empty");
   document.getElementById("en-copy-btn").disabled = true;
@@ -683,7 +700,6 @@ fetch("https://script.google.com/macros/s/AKfycbzy3lCltzDdM3mWkCWS8M5jvhdtQDb0vW
   .then(function(r) { return r.json(); })
   .then(function(artists) {
     artistList = artists;
-    // If entertainment already selected when artists load, re-render the dropdown
     if (en.driver === "ent") renderEnDescBtns("ent");
   })
   .catch(function(err) { console.log("Artist load error:", err); });
