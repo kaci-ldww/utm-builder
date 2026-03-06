@@ -344,17 +344,23 @@ document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
 
 // ── MONTH DROPDOWN ────────────────────────────
 (function() {
-  var months = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
   var now = new Date();
   var sel = document.getElementById("en-month");
   for (var y = now.getFullYear(); y <= now.getFullYear() + 1; y++) {
-    months.forEach(function(m, i) {
-      var opt = document.createElement("option");
-      opt.value = m + y;
-      opt.textContent = m.charAt(0).toUpperCase() + m.slice(1) + " " + y;
-      if (y === now.getFullYear() && i === now.getMonth()) opt.selected = true;
-      sel.appendChild(opt);
-    });
+    for (var m = 0; m < 12; m++) {
+      var daysInMonth = new Date(y, m + 1, 0).getDate();
+      for (var d = 1; d <= daysInMonth; d++) {
+        var mm = String(m + 1).padStart(2, "0");
+        var dd = String(d).padStart(2, "0");
+        var yyyy = String(y);
+        var val = mm + dd + yyyy;
+        var opt = document.createElement("option");
+        opt.value = val;
+        opt.textContent = val;
+        if (y === now.getFullYear() && m === now.getMonth() && d === now.getDate()) opt.selected = true;
+        sel.appendChild(opt);
+      }
+    }
   }
   en.month = sel.value;
 })();
