@@ -232,13 +232,31 @@
         <span style="font-size:13px;font-weight:700;color:#f1f5f9;">Link Builder</span>
       </div>
 
+      <!-- Source -->
+      <div class="section">
+        <div class="section-label">Source <span>required</span></div>
+        <div class="btn-row" id="source-btns"></div>
+      </div>
+
+      <!-- Campaign -->
+      <div class="section">
+        <div class="section-label">Campaign <span>required</span></div>
+        <div class="btn-row" id="campaign-btns"></div>
+      </div>
+
+      <!-- Term (dynamic) -->
+      <div class="section">
+        <div class="section-label">Term <span>based on campaign</span></div>
+        <div class="btn-row" id="term-btns"><span class="empty-hint">Select a campaign first</span></div>
+      </div>
+
+      <hr class="divider" />
+
       <!-- URL -->
       <div class="field">
         <label>Destination URL *</label>
         <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
       </div>
-
-      <hr class="divider" />
 
       <!-- Source + Medium -->
       <div class="grid-2">
@@ -378,6 +396,7 @@ const UTM_CAMPAIGN_PRESETS = [
   { label: "Entertainment",   campaign: "entertainment"  },
   { label: "Gaming",          campaign: "gaming"         },
   { label: "Hotel",           campaign: "hotel"          },
+  { label: "Wild Card",       campaign: "wildcard"       },
   { label: "Golf",            campaign: "golf"           },
   { label: "Amenities",       campaign: "amenities"      }
 ];
@@ -556,23 +575,24 @@ function useEmailName() {
   var preview = document.getElementById("en-preview");
   if (!preview || preview.classList.contains("empty")) return;
 
+  // Map driver code to full UTM campaign name
   var driverToCampaign = {
-  ent:     "entertainment",
-  gaming:  "gaming",
-  ongoing: "ongoing",
-  hotel:   "hotel",
-  golf:    "golf",
-  pool:    "pool",
-  spa:     "spa"
-};
-if (en.driver) document.getElementById("f-campaign").value = driverToCampaign[en.driver] || en.driver;
+    ent:     "entertainment",
+    gaming:  "gaming",
+    ongoing: "ongoing",
+    hotel:   "hotel",
+    golf:    "golf",
+    pool:    "pool",
+    spa:     "spa"
+  };
+  if (en.driver)    document.getElementById("f-campaign").value = driverToCampaign[en.driver] || en.driver;
   if (en.emailType) document.getElementById("f-source").value   = en.emailType;
   if (en.content)   document.getElementById("f-content").value  = en.content;
 
-  // Refresh term buttons first, then set the value after
+  // Refresh term buttons first
   updateCampaignDynamic();
 
-  // description + type2 joined by underscore → term
+  // description + type2 joined by underscore → term (must be set AFTER updateCampaignDynamic)
   var termParts = [en.desc, en.type2].filter(function(p) { return p && p.trim() !== ""; });
   document.getElementById("f-term").value = termParts.join("_");
 
@@ -626,7 +646,6 @@ function updateCampaignDynamic() {
     };
     container.appendChild(btn);
   });
-  document.getElementById("f-term").value = "";
 }
 
 function setActive(containerId, activeBtn) {
@@ -823,6 +842,8 @@ fetch("https://script.google.com/macros/s/AKfycbzy3lCltzDdM3mWkCWS8M5jvhdtQDb0vW
   .then(function(r) { return r.json(); })
   .then(function(artists) {
     artistList = artists;
+    // If entertainment is already selected, re-render the desc section with loaded artists
+    if (en.driver === "ent") renderEnDescBtns("ent");
   })
   .catch(function(err) { console.log("Artist load error:", err); });
 
