@@ -232,16 +232,24 @@
         <span style="font-size:13px;font-weight:700;color:#f1f5f9;">Link Builder</span>
       </div>
 
+      <!-- URL -->
+      <div class="field">
+        <label>Destination URL *</label>
+        <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Campaign -->
+      <div class="section">
+        <div class="section-label">Campaign <span>select one</span></div>
+        <div class="btn-row" id="campaign-btns"></div>
+      </div>
+
       <!-- Source -->
       <div class="section">
         <div class="section-label">Source <span>required</span></div>
         <div class="btn-row" id="source-btns"></div>
-      </div>
-
-      <!-- Campaign -->
-      <div class="section">
-        <div class="section-label">Campaign <span>required</span></div>
-        <div class="btn-row" id="campaign-btns"></div>
       </div>
 
       <!-- Term (dynamic) -->
