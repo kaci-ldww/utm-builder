@@ -183,12 +183,10 @@
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-label">Month / Year <span>required</span></div>
-        <select id="en-month" class="styled" onchange="buildEmailName()" style="max-width:220px;">
-          <option value="">-- Select month --</option>
-        </select>
-      </div>
+    <div class="section">
+      <div class="section-label">Date <span>MMDDYYYY</span></div>
+      <input type="text" id="en-month" placeholder="MMDDYYYY" maxlength="8" oninput="buildEmailName()" style="max-width:160px;" />
+    </div>
 
       <div class="name-preview-wrap">
         <div class="name-preview-label">Generated Email Name</div>
@@ -343,27 +341,7 @@ let en = { driver: "", emailType: "", content: "", desc: "", type2: "", month: "
 document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
 
 // ── MONTH DROPDOWN ────────────────────────────
-(function() {
-  var now = new Date();
-  var sel = document.getElementById("en-month");
-  for (var y = now.getFullYear(); y <= now.getFullYear() + 1; y++) {
-    for (var m = 0; m < 12; m++) {
-      var daysInMonth = new Date(y, m + 1, 0).getDate();
-      for (var d = 1; d <= daysInMonth; d++) {
-        var mm = String(m + 1).padStart(2, "0");
-        var dd = String(d).padStart(2, "0");
-        var yyyy = String(y);
-        var val = mm + dd + yyyy;
-        var opt = document.createElement("option");
-        opt.value = val;
-        opt.textContent = val;
-        if (y === now.getFullYear() && m === now.getMonth() && d === now.getDate()) opt.selected = true;
-        sel.appendChild(opt);
-      }
-    }
-  }
-  en.month = sel.value;
-})();
+
 
 // ── DRIVER BUTTONS ────────────────────────────
 DRIVERS.forEach(function(d) {
