@@ -25,23 +25,19 @@
     .panel { display: none; }
     .panel.active { display: block; }
 
-    /* Cards */
     .card { background: #0a0f1e; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
     .card.valid { border-color: #6366f133; }
     .card-title { font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
     .card-sub { font-size: 12px; color: #475569; margin-bottom: 16px; }
 
-    /* Divider */
     .divider { border: none; border-top: 1px solid #1e293b; margin: 20px 0; }
 
-    /* Sections */
     .section { margin-bottom: 18px; }
     .section:last-child { margin-bottom: 0; }
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
     .section-label span { font-size: 10px; font-weight: 400; color: #475569; text-transform: none; letter-spacing: 0; margin-left: 6px; }
     .btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
 
-    /* Buttons */
     .preset-btn { padding: 5px 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #94a3b8; font-size: 12px; cursor: pointer; font-family: 'DM Mono', monospace; transition: all 0.15s; }
     .preset-btn:hover { border-color: #6366f1; color: #c7d2fe; }
     .preset-btn.active-sel { background: #6366f122; border-color: #6366f1; color: #c7d2fe; }
@@ -55,18 +51,9 @@
     .preset-btn.desc-btn:hover, .preset-btn.desc-btn.active-sel { background: #0c2018; border-color: #34d399; color: #d1fae5; }
     .preset-btn.type2-btn { border-color: #3a2010; color: #fbbf24; }
     .preset-btn.type2-btn:hover, .preset-btn.type2-btn.active-sel { background: #2a1808; border-color: #f59e0b; color: #fde68a; }
-    .preset-btn.campaign { border-color: #1e3a5f; color: #7dd3fc; font-family: 'DM Sans', sans-serif; }
-    .preset-btn.campaign:hover, .preset-btn.campaign.active-sel { background: #0c2a4a; border-color: #38bdf8; color: #e0f2fe; }
-    .preset-btn.source-btn { border-color: #1e293b; color: #94a3b8; }
-    .preset-btn.source-btn:hover, .preset-btn.source-btn.active-sel { background: #1e293b22; border-color: #6366f1; color: #c7d2fe; }
-    .preset-btn.utm-content-btn { border-color: #2d1f4f; color: #a78bfa; }
-    .preset-btn.utm-content-btn:hover, .preset-btn.utm-content-btn.active-sel { background: #1e1040; border-color: #8b5cf6; color: #ddd6fe; }
-    .preset-btn.term-btn { border-color: #1a3040; color: #67e8f9; }
-    .preset-btn.term-btn:hover, .preset-btn.term-btn.active-sel { background: #0c2030; border-color: #22d3ee; color: #cffafe; }
 
     .empty-hint { font-size: 12px; color: #334155; font-style: italic; padding: 4px 0; }
 
-    /* Inputs */
     .field { margin-bottom: 14px; }
     .field:last-child { margin-bottom: 0; }
     .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
@@ -78,7 +65,6 @@
     select.styled { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none; font-family: 'DM Mono', monospace; transition: border-color 0.15s; }
     select.styled:focus { border-color: #6366f1; }
 
-    /* Email name preview */
     .name-preview-wrap { margin-top: 16px; }
     .name-preview-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
     .name-preview { background: #020817; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 14px; font-family: 'DM Mono', monospace; font-size: 13px; color: #34d399; word-break: break-all; min-height: 42px; }
@@ -91,11 +77,9 @@
     .btn-use-name:hover { border-color: #6366f1; color: #c7d2fe; }
     .btn-use-name:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* UTM section */
     .utm-section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #1e293b; }
     .utm-badge { background: #6366f122; border: 1px solid #6366f144; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 700; color: #818cf8; letter-spacing: 0.06em; }
 
-    /* Toggles */
     .toggle-row { display: flex; align-items: center; gap: 8px; }
     .toggle { width: 36px; height: 20px; background: #1e293b; border-radius: 10px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
     .toggle.on { background: #6366f1; }
@@ -103,7 +87,6 @@
     .toggle.on .toggle-knob { left: 19px; }
     .toggle-label { font-size: 12px; color: #64748b; }
 
-    /* URL preview */
     .url-preview { font-size: 12px; color: #94a3b8; word-break: break-all; font-family: 'DM Mono', monospace; line-height: 1.7; background: #020817; padding: 10px 12px; border-radius: 7px; border: 1px solid #1e293b; }
     .preview-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
     .preview-label.valid { color: #6366f1; } .preview-label.invalid { color: #475569; }
@@ -117,7 +100,6 @@
     .log-status { font-size: 12px; }
     .log-status.ok { color: #22c55e; } .log-status.err { color: #f87171; } .log-status.loading { color: #818cf8; }
 
-    /* History */
     .history-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: #475569; }
     .btn-ghost { font-size: 12px; padding: 4px 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #64748b; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .history-item { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
@@ -132,7 +114,6 @@
     .empty-icon { font-size: 36px; margin-bottom: 12px; }
     .empty-text { font-size: 14px; }
 
-    /* Sheets */
     .step-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
     .step-num { width: 22px; height: 22px; background: #6366f122; border: 1px solid #6366f144; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #818cf8; flex-shrink: 0; }
     .step-text { font-size: 13px; color: #94a3b8; line-height: 1.5; padding-top: 2px; }
@@ -163,18 +144,16 @@
 
   <div id="panel-builder" class="panel active">
 
-    <!-- ── EMAIL NAME BUILDER ── -->
+    <!-- EMAIL NAME BUILDER -->
     <div class="card">
       <div class="card-title">&#9993; Email Name Builder</div>
-      <div class="card-sub">Select options below to generate your email name. It will auto-fill the Content field in the UTM form.</div>
+      <div class="card-sub">Select options to generate your email name. Hit "Use in UTM Form" to auto-fill the fields below.</div>
 
-      <!-- Business Driver -->
       <div class="section">
         <div class="section-label">Business Driver <span>required</span></div>
         <div class="btn-row" id="driver-btns"></div>
       </div>
 
-      <!-- Email Type -->
       <div class="section">
         <div class="section-label">Email Type <span>required</span></div>
         <div class="btn-row">
@@ -184,19 +163,16 @@
         </div>
       </div>
 
-      <!-- Content (dynamic by driver) -->
       <div class="section">
         <div class="section-label">Content <span>based on business driver</span></div>
         <div class="btn-row" id="en-content-btns"><span class="empty-hint">Select a business driver first</span></div>
       </div>
 
-      <!-- Description (dynamic by driver) -->
       <div class="section">
         <div class="section-label">Description <span>based on business driver</span></div>
         <div class="btn-row" id="en-desc-btns"><span class="empty-hint">Select a business driver first</span></div>
       </div>
 
-      <!-- Email Type 2 (optional) -->
       <div class="section">
         <div class="section-label">Email Type 2 <span>optional</span></div>
         <div class="btn-row">
@@ -206,7 +182,6 @@
         </div>
       </div>
 
-      <!-- Month/Year -->
       <div class="section">
         <div class="section-label">Month / Year <span>required</span></div>
         <select id="en-month" class="styled" onchange="buildEmailName()" style="max-width:220px;">
@@ -214,7 +189,6 @@
         </select>
       </div>
 
-      <!-- Generated Name Preview -->
       <div class="name-preview-wrap">
         <div class="name-preview-label">Generated Email Name</div>
         <div class="name-preview empty" id="en-preview">Fill in the fields above to generate your email name</div>
@@ -225,24 +199,22 @@
       </div>
     </div>
 
-    <!-- ── UTM BUILDER ── -->
+    <!-- UTM BUILDER -->
     <div class="card">
       <div class="utm-section-header">
         <span class="utm-badge">UTM</span>
         <span style="font-size:13px;font-weight:700;color:#f1f5f9;">Link Builder</span>
       </div>
 
-      <!-- URL -->
       <div class="field">
         <label>Destination URL *</label>
         <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
       </div>
 
-      <!-- Source + Medium -->
       <div class="grid-2">
         <div class="field">
           <label>Source *</label>
-          <input type="text" id="f-source" placeholder="select above" oninput="updatePreview()" />
+          <input type="text" id="f-source" placeholder="auto-filled from email name" oninput="updatePreview()" />
         </div>
         <div class="field">
           <label>Medium *</label>
@@ -250,25 +222,22 @@
         </div>
       </div>
 
-      <!-- Campaign + Content -->
       <div class="grid-2">
         <div class="field">
           <label>Campaign *</label>
-          <input type="text" id="f-campaign" placeholder="select above" oninput="updateCampaignDynamic(); updatePreview()" />
+          <input type="text" id="f-campaign" placeholder="auto-filled from email name" oninput="updatePreview()" />
         </div>
         <div class="field">
           <label>Content <span style="font-size:10px;color:#6366f1;font-weight:400;text-transform:none;letter-spacing:0;">auto-filled from email name</span></label>
-          <input type="text" id="f-content" placeholder="use email name builder above" oninput="updatePreview()" />
+          <input type="text" id="f-content" placeholder="auto-filled from email name" oninput="updatePreview()" />
         </div>
       </div>
 
-      <!-- Term -->
       <div class="field">
-        <label>Term</label>
-        <input type="text" id="f-term" placeholder="select above or type" oninput="updatePreview()" />
+        <label>Term <span style="font-size:10px;color:#6366f1;font-weight:400;text-transform:none;letter-spacing:0;">auto-filled from description + email type 2</span></label>
+        <input type="text" id="f-term" placeholder="auto-filled from email name" oninput="updatePreview()" />
       </div>
 
-      <!-- Toggles -->
       <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:6px;margin-bottom:16px;">
         <div class="toggle-row">
           <div class="toggle on" id="toggle-slug" onclick="toggleSlug()"><div class="toggle-knob"></div></div>
@@ -280,13 +249,11 @@
         </div>
       </div>
 
-      <!-- Preview -->
       <div class="card" id="preview-card" style="display:none;margin-bottom:16px;">
         <div class="preview-label" id="preview-label"></div>
         <div class="url-preview" id="url-preview"></div>
       </div>
 
-      <!-- Actions -->
       <div class="actions">
         <button class="btn-primary" id="copy-btn" onclick="handleCopy()" disabled>Copy URL</button>
         <span class="log-status" id="log-status" style="display:none"></span>
@@ -294,14 +261,12 @@
       </div>
     </div>
 
-  </div><!-- end panel-builder -->
+  </div>
 
-  <!-- HISTORY -->
   <div id="panel-history" class="panel">
     <div id="history-list"></div>
   </div>
 
-  <!-- SHEETS -->
   <div id="panel-sheets" class="panel">
     <div class="card">
       <div style="font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:4px;">Connect Google Sheets</div>
@@ -328,11 +293,11 @@
     </div>
   </div>
 
-</div><!-- end #app -->
+</div>
 
 <script>
 // ─────────────────────────────────────────────
-// EMAIL NAME BUILDER CONFIG
+// CONFIG
 // ─────────────────────────────────────────────
 const DRIVERS = [
   { label: "Entertainment", code: "ent"     },
@@ -354,9 +319,8 @@ const EN_CONTENT_BY_DRIVER = {
   pool:    ["afterhours","prestay","membership","retail_package","convention"]
 };
 
-// For description: entertainment uses artist dropdown, others use static lists
 const EN_DESC_BY_DRIVER = {
-  // entertainment uses artist sheet — handled separately
+  // ent uses artist dropdown from sheet
   gaming:  ["newmember"],
   ongoing: ["reengagement1","reengagement2","reengagement3"],
   hotel:   ["email1","email2","initial","reminder"],
@@ -365,10 +329,15 @@ const EN_DESC_BY_DRIVER = {
   pool:    ["email1","email2","initial","reminder"]
 };
 
-// ─────────────────────────────────────────────
-// UTM BUILDER CONFIG
-// ─────────────────────────────────────────────
-
+const DRIVER_TO_CAMPAIGN = {
+  ent:     "entertainment",
+  gaming:  "gaming",
+  ongoing: "ongoing",
+  hotel:   "hotel",
+  golf:    "golf",
+  pool:    "pool",
+  spa:     "spa"
+};
 // ─────────────────────────────────────────────
 
 const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.url, data.source, data.medium, data.campaign, data.content, data.term, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
@@ -376,8 +345,6 @@ const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openBy
 // State
 let autoSlug = true, autoLog = false, sheetsUrl = "", history = [];
 let artistList = [];
-
-// Email name builder state
 let en = { driver: "", emailType: "", content: "", desc: "", type2: "", month: "" };
 
 document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
@@ -392,7 +359,6 @@ document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
       var opt = document.createElement("option");
       opt.value = m + y;
       opt.textContent = m.charAt(0).toUpperCase() + m.slice(1) + " " + y;
-      // Pre-select current month
       if (y === now.getFullYear() && i === now.getMonth()) opt.selected = true;
       sel.appendChild(opt);
     });
@@ -400,7 +366,7 @@ document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
   en.month = sel.value;
 })();
 
-// ── BUILD DRIVER BUTTONS ──────────────────────
+// ── DRIVER BUTTONS ────────────────────────────
 DRIVERS.forEach(function(d) {
   var btn = document.createElement("button");
   btn.className = "preset-btn driver-btn";
@@ -441,19 +407,23 @@ function renderEnDescBtns(driver) {
   en.desc = "";
 
   if (driver === "ent") {
-    // Artist dropdown from sheet
     var sel = document.createElement("select");
     sel.className = "styled";
     sel.style.maxWidth = "300px";
     var defOpt = document.createElement("option");
-    defOpt.value = ""; defOpt.textContent = artistList.length ? "-- Select artist --" : "Loading artists...";
+    defOpt.value = "";
+    defOpt.textContent = artistList.length ? "-- Select artist --" : "Loading artists...";
     sel.appendChild(defOpt);
     artistList.forEach(function(a) {
       var opt = document.createElement("option");
-      opt.value = a.code; opt.textContent = a.name;
+      opt.value = a.code;
+      opt.textContent = a.name;
       sel.appendChild(opt);
     });
-    sel.onchange = function() { en.desc = this.value; buildEmailName(); };
+    sel.onchange = function() {
+      en.desc = this.value;
+      buildEmailName();
+    };
     container.appendChild(sel);
     return;
   }
@@ -481,7 +451,6 @@ function setEmailType(btn, val) {
 
 function toggleType2(btn, val) {
   if (en.type2 === val) {
-    // deselect
     btn.classList.remove("active-sel");
     en.type2 = "";
   } else {
@@ -502,7 +471,6 @@ function buildEmailName() {
   var parts = [en.driver, en.emailType, en.content, en.desc];
   if (en.type2) parts.push(en.type2);
   parts.push(en.month);
-  // Filter out empty parts
   var filtered = parts.filter(function(p) { return p && p.trim() !== ""; });
   var name = filtered.join("_");
   var preview = document.getElementById("en-preview");
@@ -534,24 +502,12 @@ function useEmailName() {
   var preview = document.getElementById("en-preview");
   if (!preview || preview.classList.contains("empty")) return;
 
-  // Map driver code to full UTM campaign name
-  var driverToCampaign = {
-    ent:     "entertainment",
-    gaming:  "gaming",
-    ongoing: "ongoing",
-    hotel:   "hotel",
-    golf:    "golf",
-    pool:    "pool",
-    spa:     "spa"
-  };
-  if (en.driver)    document.getElementById("f-campaign").value = driverToCampaign[en.driver] || en.driver;
+  // Push each field individually — no updateCampaignDynamic() call here since there are no term buttons
+  if (en.driver)    document.getElementById("f-campaign").value = DRIVER_TO_CAMPAIGN[en.driver] || en.driver;
   if (en.emailType) document.getElementById("f-source").value   = en.emailType;
   if (en.content)   document.getElementById("f-content").value  = en.content;
 
-  // Refresh term buttons first
-  updateCampaignDynamic();
-
-  // description + type2 joined by underscore → term (must be set AFTER updateCampaignDynamic)
+  // description + type2 joined by underscore → term
   var termParts = [en.desc, en.type2].filter(function(p) { return p && p.trim() !== ""; });
   document.getElementById("f-term").value = termParts.join("_");
 
@@ -559,60 +515,7 @@ function useEmailName() {
   document.getElementById("f-url").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-// ── UTM BUILDER ───────────────────────────────
-
-// Source buttons
-UTM_SOURCES.forEach(function(s) {
-  var btn = document.createElement("button");
-  btn.className = "preset-btn source-btn";
-  btn.textContent = s;
-  btn.onclick = function() {
-    setActive("source-btns", btn);
-    document.getElementById("f-source").value = s;
-    updatePreview();
-  };
-  document.getElementById("source-btns").appendChild(btn);
-});
-
-// Campaign buttons
-UTM_CAMPAIGN_PRESETS.forEach(function(p) {
-  var btn = document.createElement("button");
-  btn.className = "preset-btn campaign";
-  btn.textContent = p.label;
-  btn.onclick = function() {
-    setActive("campaign-btns", btn);
-    document.getElementById("f-campaign").value = p.campaign;
-    updateCampaignDynamic();
-    updatePreview();
-  };
-  document.getElementById("campaign-btns").appendChild(btn);
-});
-
-function updateCampaignDynamic() {
-  var campaign = document.getElementById("f-campaign").value.trim().toLowerCase();
-  var terms = UTM_TERM_BY_CAMPAIGN[campaign] || [];
-  var container = document.getElementById("term-btns");
-  container.innerHTML = "";
-  if (!terms.length) { container.innerHTML = '<span class="empty-hint">No term options for this campaign</span>'; return; }
-  terms.forEach(function(val) {
-    var btn = document.createElement("button");
-    btn.className = "preset-btn term-btn";
-    btn.textContent = val;
-    btn.onclick = function() {
-      setActive("term-btns", btn);
-      document.getElementById("f-term").value = val;
-      updatePreview();
-    };
-    container.appendChild(btn);
-  });
-}
-
-function setActive(containerId, activeBtn) {
-  var container = document.getElementById(containerId);
-  container.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
-  activeBtn.classList.add("active-sel");
-}
-
+// ── CORE UTM FUNCTIONS ────────────────────────
 function slugify(str) { return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, ""); }
 function fmt(v) { return autoSlug ? slugify(v) : v; }
 
@@ -705,7 +608,6 @@ async function logToSheets(entry) {
 }
 
 function resetForm() {
-  // Reset email name builder
   en = { driver: "", emailType: "", content: "", desc: "", type2: "", month: document.getElementById("en-month").value };
   document.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
   document.getElementById("en-content-btns").innerHTML = '<span class="empty-hint">Select a business driver first</span>';
@@ -714,10 +616,8 @@ function resetForm() {
   document.getElementById("en-preview").classList.add("empty");
   document.getElementById("en-copy-btn").disabled = true;
   document.getElementById("en-use-btn").disabled = true;
-  // Reset UTM form
   ["f-url","f-source","f-campaign","f-content","f-term"].forEach(function(id) { document.getElementById(id).value = ""; });
   document.getElementById("f-medium").value = "email";
-  document.getElementById("term-btns").innerHTML = '<span class="empty-hint">Select a campaign first</span>';
   document.getElementById("preview-card").style.display = "none";
   document.getElementById("copy-btn").disabled = true;
   document.getElementById("log-status").style.display = "none";
@@ -764,7 +664,6 @@ function loadHistory(i) {
   document.getElementById("f-campaign").value = item.params.utm_campaign || "";
   document.getElementById("f-content").value = item.params.utm_content || "";
   document.getElementById("f-term").value = item.params.utm_term || "";
-  updateCampaignDynamic();
   switchTab("builder"); updatePreview();
 }
 
@@ -794,6 +693,12 @@ function switchTab(tab) {
   if (tab === "history") updateHistoryTab();
 }
 
+function setActive(containerId, activeBtn) {
+  var container = document.getElementById(containerId);
+  container.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
+  activeBtn.classList.add("active-sel");
+}
+
 // Load artists from Google Sheet
 fetch("https://script.google.com/macros/s/AKfycbzy3lCltzDdM3mWkCWS8M5jvhdtQDb0vWq9Msu9fX6tQubO4yY7fWSB0ohIcv1O2q4alA/exec", {
   method: "GET", mode: "cors"
@@ -801,12 +706,11 @@ fetch("https://script.google.com/macros/s/AKfycbzy3lCltzDdM3mWkCWS8M5jvhdtQDb0vW
   .then(function(r) { return r.json(); })
   .then(function(artists) {
     artistList = artists;
-    // If entertainment is already selected, re-render the desc section with loaded artists
+    // If entertainment already selected when artists load, re-render the dropdown
     if (en.driver === "ent") renderEnDescBtns("ent");
   })
   .catch(function(err) { console.log("Artist load error:", err); });
 
-// Init
 buildEmailName();
 updateHistoryTab();
 </script>
