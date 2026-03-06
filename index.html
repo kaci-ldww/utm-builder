@@ -576,7 +576,16 @@ function useEmailName() {
   var preview = document.getElementById("en-preview");
   if (!preview || preview.classList.contains("empty")) return;
 
-  if (en.driver)    document.getElementById("f-campaign").value = en.driver;
+  var driverToCampaign = {
+  ent:     "entertainment",
+  gaming:  "gaming",
+  ongoing: "ongoing",
+  hotel:   "hotel",
+  golf:    "golf",
+  pool:    "pool",
+  spa:     "spa"
+};
+if (en.driver) document.getElementById("f-campaign").value = driverToCampaign[en.driver] || en.driver;
   if (en.emailType) document.getElementById("f-source").value   = en.emailType;
   if (en.content)   document.getElementById("f-content").value  = en.content;
 
