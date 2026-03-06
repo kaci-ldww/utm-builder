@@ -176,8 +176,9 @@
       <div class="section">
         <div class="section-label">Email Type 2 <span>optional</span></div>
         <div class="btn-row">
-          <button class="preset-btn type2-btn" onclick="toggleType2(this,'followup')">followup</button>
-          <button class="preset-btn type2-btn" onclick="toggleType2(this,'elite')">elite</button>
+          <button class="preset-btn type2-btn" onclick="toggleType2(this,'newmember')">newmember</button>
+          <button class="preset-btn type2-btn" onclick="toggleType2(this,'uncarded')">uncarded</button>
+          <button class="preset-btn type2-btn" onclick="toggleType2(this,'carded')">carded</button>
           <button class="preset-btn type2-btn" onclick="toggleType2(this,'couples')">couples</button>
         </div>
       </div>
@@ -302,41 +303,33 @@
 const DRIVERS = [
   { label: "Entertainment", code: "ent"     },
   { label: "Gaming",        code: "gaming"  },
-  { label: "Ongoing",       code: "ongoing" },
-  { label: "Hotel",         code: "hotel"   },
-  { label: "Golf",          code: "golf"    },
-  { label: "Pool",          code: "pool"    },
-  { label: "Spa",           code: "spa"     }
+  { label: "Brand Awareness",    code: "brandawareness" },
+  { label: "Amenities",         code: "amenities"   },
+  { label: "Golf",          code: "golf"    }
 ];
 
 const EN_CONTENT_BY_DRIVER = {
-  ent:     ["presale","onsale","ticketpush_genre","ticketpush_hotel","ttgt","postshow"],
-  gaming:  ["promotion","newmember","clubpassport"],
-  ongoing: ["reengagement","gozone"],
-  hotel:   ["afterhours","prestay","membership","retail_package","convention"],
-  golf:    ["afterhours","prestay","membership","retail_package","convention"],
-  spa:     ["afterhours","prestay","membership","retail_package","convention"],
-  pool:    ["afterhours","prestay","membership","retail_package","convention"]
+  ent:     ["presale","onsale","ticketpush_genre","ticketpush_hotel","ttgt","postshow","bogo","rescheduled","canceled","giveaway"],
+  gaming:  ["promotion","mywinstar","clubpassport"],
+  brandawareness: ["reengagement","gozone","welcome","giveaway"],
+  amenities:   ["hotel","spa","pool","dining","meet"],
+  golf:    ["instruction","retailpackage","membership","tournaments"]
 };
 
 const EN_DESC_BY_DRIVER = {
   // ent uses artist dropdown from sheet
-  gaming:  ["newmember"],
-  ongoing: ["reengagement1","reengagement2","reengagement3"],
-  hotel:   ["email1","email2","initial","reminder"],
-  golf:    ["email1","email2","initial","reminder"],
-  spa:     ["email1","email2","initial","reminder"],
-  pool:    ["email1","email2","initial","reminder"]
+  gaming:  ["membership","awareness"],
+  brandawareness: ["reengagement1","reengagement2","reengagement3"],
+  amenities:   ["retailpackage","conventions","weddings","catering","prestay1","prestay2"],
+  golf:    ["email1","email2","email3"]
 };
 
 const DRIVER_TO_CAMPAIGN = {
   ent:     "entertainment",
   gaming:  "gaming",
-  ongoing: "ongoing",
-  hotel:   "hotel",
-  golf:    "golf",
-  pool:    "pool",
-  spa:     "spa"
+  brandawareness: "brandawareness",
+  amenities:   "hotel",
+  golf:    "golf"
 };
 // ─────────────────────────────────────────────
 
