@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WinStar Organic Social UTM Builder</title>
+  <title>Riverwind Organic Social UTM Builder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
@@ -118,9 +118,9 @@
   <div class="header">
     <div class="header-row">
       <div class="logo">&#9889;</div>
-      <h1>WinStar Organic Social UTM Builder</h1>
+      <h1>Riverwind Organic Social UTM Builder</h1>
     </div>
-    <p class="subtitle">Generate, log, and manage organic social tracking links for WinStar.</p>
+    <p class="subtitle">Generate, log, and manage organic social tracking links for Riverwind.</p>
   </div>
 
   <div class="tabs">
@@ -278,18 +278,18 @@ const CAMPAIGN_PRESETS = [
   { label: "Brand Awareness", campaign: "brandawareness" },
   { label: "Entertainment",   campaign: "entertainment"  },
   { label: "Gaming",          campaign: "gaming"         },
-  { label: "Hotel",           campaign: "hotel"          },
-  { label: "Golf",            campaign: "golf"           },
+  { label: "Players Card",    campaign: "playerscard"    },
+  { label: "Hiring",          campaign: "hiring"         },
   { label: "Amenities",       campaign: "amenities"      }
 ];
 
 const CONTENT_BY_CAMPAIGN = {
-  entertainment:  ["general","announce","onsale","reminder","onsalereminder","presale","upsell","reschedule","reply","postshow","package","cancellation","passporttosummer"],
-  brandawareness: ["explorewinstar","general","gozone","wsapp","winstarwinners","passporttosummer","TCUoffer"],
-  gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","10kgames","rmg","offer","passporttosummer"],
-  golf:           ["general","academy","courses","membership","proshop","golftournaments","clubhouse","signup","partnership","retail","passporttosummer"],
-  hotel:          ["gaming","shuttle","reply","dining","wsapp","offer","passporttosummer"],
-  amenities:      ["pool","dining","spa","shopping","events","gaming","shuttle","golf","clubpassport","mywinstar","giveaway","passporttosummer"],
+  entertainment:  ["general","announce","onsale","reminder","onsalereminder","presale","upsell","reschedule","reply","postshow","package","cancellation","reminder"],
+  brandawareness: ["general","rwapp"],
+  gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","wildcard","offer","gamefinder"],
+  playerscard:    ["general","levelup","wildcard","rwapp","newmember"],
+  hiring:         ["general"],
+  amenities:      ["hotel","dining","shopping"],
   wildcard:       []
 };
 
