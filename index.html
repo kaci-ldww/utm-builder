@@ -571,7 +571,8 @@ async function handleCopy() {
   var btn = document.getElementById("copy-btn");
   btn.textContent = "Copied!"; btn.classList.add("copied");
   setTimeout(function() { btn.textContent = "Copy URL"; btn.classList.remove("copied"); }, 2000);
-  var entry = { url: built.full, baseUrl: built.url, params: { utm_source: built.source, utm_medium: built.medium, utm_campaign: built.campaign, utm_content: built.content, utm_term: built.term }, ts: Date.now(), logged: false };
+  var emailName = document.getElementById("en-preview").classList.contains("empty") ? "" : document.getElementById("en-preview").textContent;
+  var entry = { url: built.full, baseUrl: built.url, emailName: emailName, params: { utm_source: built.source, utm_medium: built.medium, utm_campaign: built.campaign, utm_content: built.content, utm_term: built.term }, ts: Date.now(), logged: false };
   if (sheetsUrl && autoLog) {
     showLogStatus("loading", "Logging...");
     var ok = await logToSheets(entry);
@@ -593,7 +594,7 @@ async function logToSheets(entry) {
   if (!sheetsUrl) return false;
   try {
     await fetch(sheetsUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: entry.baseUrl, source: entry.params.utm_source, medium: entry.params.utm_medium, campaign: entry.params.utm_campaign, content: entry.params.utm_content || "", term: entry.params.utm_term || "", fullUrl: entry.url }) });
+      body: JSON.stringify({ url: entry.baseUrl, emailName: entry.emailName || "", source: entry.params.utm_source, medium: entry.params.utm_medium, campaign: entry.params.utm_campaign, content: entry.params.utm_content || "", term: entry.params.utm_term || "", fullUrl: entry.url }) });
     return true;
   } catch(e) { return false; }
 }
