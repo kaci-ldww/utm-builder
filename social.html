@@ -578,17 +578,21 @@ function switchTab(tab) {
   if (tab === "history") updateHistoryTab();
 }
 
-// Load artists from Google Sheet
-fetch("https://script.google.com/macros/s/AKfycbzGDP88NOG1NKLUlOusD0Doqz23h3ErjhdzTsID4SuusbLNiy6TTNzKJT0Ml3mfwLA/exec", {
-  method: "GET", mode: "cors"
-})
-  .then(function(r) { return r.json(); })
-  .then(function(artists) {
-    artistList = artists;
-  })
-  .catch(function(err) {
-    console.log("Artist load error:", err);
-  });
+// Load artists via JSONP to avoid CORS issues
+function loadArtists() {
+  var script = document.createElement("script");
+  script.src = "https://script.google.com/macros/s/AKfycbzGDP88NOG1NKLUlOusD0Doqz23h3ErjhdzTsID4SuusbLNiy6TTNzKJT0Ml3mfwLA/exec?callback=handleArtists";
+  document.body.appendChild(script);
+}
+
+function handleArtists(artists) {
+  artistList = artists;
+  // If entertainment is already selected, re-render the dropdown
+  var campaign = document.getElementById("f-campaign").value.trim().toLowerCase();
+  if (campaign === "entertainment") updateCampaignDynamic();
+}
+
+loadArtists();
 
 updateHistoryTab();
 
