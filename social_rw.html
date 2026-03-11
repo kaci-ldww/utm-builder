@@ -23,13 +23,11 @@
     .panel { display: none; }
     .panel.active { display: block; }
 
-    /* Section blocks */
     .section { margin-bottom: 20px; }
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
     .section-label span { font-size: 10px; font-weight: 400; color: #475569; text-transform: none; letter-spacing: 0; margin-left: 6px; }
     .btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
 
-    /* Preset buttons */
     .preset-btn { padding: 5px 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #94a3b8; font-size: 12px; cursor: pointer; font-family: 'DM Mono', monospace; transition: all 0.15s; }
     .preset-btn:hover { border-color: #6366f1; color: #c7d2fe; }
     .preset-btn.active-sel { background: #6366f122; border-color: #6366f1; color: #c7d2fe; }
@@ -58,14 +56,6 @@
     input.sans { font-family: 'DM Sans', sans-serif; }
     select.styled { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none; font-family: 'DM Mono', monospace; transition: border-color 0.15s; margin-bottom: 6px; }
     select.styled:focus { border-color: #6366f1; }
-
-    /* Selected values display */
-    .selected-values { background: #020817; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .selected-values .sv-label { font-size: 11px; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; width: 100%; margin-bottom: 2px; }
-    .sv-chip { font-size: 11px; font-family: 'DM Mono', monospace; background: #0f172a; border: 1px solid #1e293b; border-radius: 5px; padding: 3px 8px; }
-    .sv-chip .sv-key { color: #818cf8; }
-    .sv-chip .sv-val { color: #34d399; }
-    .sv-chip .sv-empty { color: #334155; }
 
     .toggle-row { display: flex; align-items: center; gap: 8px; }
     .toggle { width: 36px; height: 20px; background: #1e293b; border-radius: 10px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
@@ -131,7 +121,6 @@
 
   <div id="panel-builder" class="panel active">
 
-    <!-- URL field -->
     <div class="card">
       <div class="field" style="margin-bottom:0">
         <label>Destination URL *</label>
@@ -140,39 +129,32 @@
     </div>
 
     <div class="card">
-
-       <!-- Campaign -->
       <div class="section">
         <div class="section-label">Campaign <span>select one</span></div>
         <div class="btn-row" id="campaign-btns"></div>
       </div>
-      
-      <!-- Post Type -->
+
       <div class="section">
         <div class="section-label">Post Type <span>fills source</span></div>
         <div class="btn-row" id="source-btns"></div>
       </div>
 
-      <!-- Content — dynamic -->
       <div class="section">
         <div class="section-label">Content <span>based on campaign</span></div>
         <div class="btn-row" id="content-btns"><span class="empty-hint">Select a campaign first</span></div>
       </div>
 
-      <!-- Term — dynamic -->
       <div class="section">
         <div class="section-label">Term <span>based on campaign</span></div>
         <div class="btn-row" id="term-btns"><span class="empty-hint">Select a campaign first</span></div>
       </div>
 
-      <!-- Other Identifiers — dynamic -->
       <div class="section" id="other-section" style="margin-bottom:0">
-        <div class="section-label" id="other-label">Other Identifiers <span id="other-hint">based on campaign</span></div>
+        <div class="section-label">Other Identifiers <span id="other-hint">based on campaign</span></div>
         <div class="btn-row" id="other-btns"><span class="empty-hint">Select a campaign first</span></div>
       </div>
     </div>
 
-    <!-- Hidden inputs + medium -->
     <div class="card">
       <div class="grid-2">
         <div class="field">
@@ -207,7 +189,6 @@
       </div>
     </div>
 
-    <!-- Toggles -->
     <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
       <div class="toggle-row">
         <div class="toggle on" id="toggle-slug" onclick="toggleSlug()"><div class="toggle-knob"></div></div>
@@ -219,27 +200,23 @@
       </div>
     </div>
 
-    <!-- Preview -->
     <div class="card" id="preview-card" style="display:none">
       <div class="preview-label" id="preview-label"></div>
       <div class="url-preview" id="url-preview"></div>
     </div>
 
-    <!-- Actions -->
     <div class="actions">
       <button class="btn-primary" id="copy-btn" onclick="handleCopy()" disabled>Copy URL</button>
       <span class="log-status" id="log-status" style="display:none"></span>
       <button class="btn-secondary" onclick="resetForm()">Reset</button>
     </div>
 
-  </div><!-- end panel-builder -->
+  </div>
 
-  <!-- HISTORY -->
   <div id="panel-history" class="panel">
     <div id="history-list"></div>
   </div>
 
-  <!-- SHEETS -->
   <div id="panel-sheets" class="panel">
     <div class="card">
       <div style="font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:4px;">Connect Google Sheets</div>
@@ -270,7 +247,7 @@
 
 <script>
 // ─────────────────────────────────────────────
-// CUSTOMIZE YOUR PRESETS HERE
+// CONFIG
 // ─────────────────────────────────────────────
 const SOURCES = ["facebook","instagram","tiktok","youtube","fbstories","igstories","igbio","fbevent"];
 
@@ -302,7 +279,6 @@ const TERM_BY_CAMPAIGN = {
   amenities:      ["granvia","dcbg","lafleur","laparis","vino","ihop","chipsnales","bachelor","bachelorette","weddings","cascades","spaoffer","newmember","winstarwallet"]
 };
 
-// When campaign is NOT entertainment, show these as Other Identifiers
 const OTHER_IDENTIFIERS = ["video","reels","photo","carousel","link","still","motion"];
 // ─────────────────────────────────────────────
 
@@ -313,9 +289,8 @@ let artistList = [];
 
 document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
 
-// ── BUILD STATIC BUTTON ROWS ──────────────────
+// ── STATIC BUTTON ROWS ────────────────────────
 
-// Source buttons
 SOURCES.forEach(function(s) {
   var btn = document.createElement("button");
   btn.className = "preset-btn source-btn";
@@ -328,7 +303,6 @@ SOURCES.forEach(function(s) {
   document.getElementById("source-btns").appendChild(btn);
 });
 
-// Campaign buttons
 CAMPAIGN_PRESETS.forEach(function(p) {
   var btn = document.createElement("button");
   btn.className = "preset-btn campaign";
@@ -347,32 +321,28 @@ CAMPAIGN_PRESETS.forEach(function(p) {
 function updateCampaignDynamic() {
   var campaign = document.getElementById("f-campaign").value.trim().toLowerCase();
 
-  // Content buttons
   renderBtnRow("content-btns", CONTENT_BY_CAMPAIGN[campaign] || [], "content-btn", function(val) {
     document.getElementById("f-content").value = val;
     updatePreview();
   }, "f-content");
 
-  // Term buttons
   renderBtnRow("term-btns", TERM_BY_CAMPAIGN[campaign] || [], "term-btn", function(val) {
     document.getElementById("f-term").value = val;
     updatePreview();
   }, "f-term");
 
-  // Other Identifiers: artist dropdown for entertainment, buttons for everything else
-  var otherSection = document.getElementById("other-section");
-  var otherLabel = document.getElementById("other-hint");
+  var otherHint = document.getElementById("other-hint");
   var otherContainer = document.getElementById("other-btns");
 
   if (campaign === "entertainment") {
-    otherLabel.textContent = "artist — from sheet";
+    otherHint.textContent = "artist — from sheet";
     otherContainer.innerHTML = "";
-    // Build artist select
     var sel = document.createElement("select");
     sel.className = "styled";
     sel.style.maxWidth = "300px";
     var defaultOpt = document.createElement("option");
-    defaultOpt.value = ""; defaultOpt.textContent = artistList.length ? "-- Select artist --" : "Loading artists...";
+    defaultOpt.value = "";
+    defaultOpt.textContent = artistList.length ? "-- Select artist --" : "Loading artists...";
     sel.appendChild(defaultOpt);
     artistList.forEach(function(a) {
       var opt = document.createElement("option");
@@ -385,14 +355,13 @@ function updateCampaignDynamic() {
     };
     otherContainer.appendChild(sel);
   } else {
-    otherLabel.textContent = "format type";
+    otherHint.textContent = "format type";
     renderBtnRow("other-btns", OTHER_IDENTIFIERS, "other-btn", function(val) {
       document.getElementById("f-other").value = val;
       updatePreview();
     }, "f-other");
   }
 
-  // Clear dependent fields when campaign changes
   document.getElementById("f-content").value = "";
   document.getElementById("f-term").value = "";
   document.getElementById("f-other").value = "";
@@ -522,9 +491,7 @@ async function logToSheets(entry) {
 function resetForm() {
   ["f-url","f-source","f-campaign","f-content","f-term","f-other"].forEach(function(id) { document.getElementById(id).value = ""; });
   document.getElementById("f-medium").value = "social";
-  // Clear all active states
   document.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
-  // Reset dynamic sections
   document.getElementById("content-btns").innerHTML = '<span class="empty-hint">Select a campaign first</span>';
   document.getElementById("term-btns").innerHTML = '<span class="empty-hint">Select a campaign first</span>';
   document.getElementById("other-btns").innerHTML = '<span class="empty-hint">Select a campaign first</span>';
@@ -584,6 +551,11 @@ function updateSaveBtn() { document.getElementById("save-sheets-btn").disabled =
 
 function saveSheets() {
   sheetsUrl = document.getElementById("sheets-url-input").value.trim();
+  if (sheetsUrl) {
+    localStorage.setItem("utm_riverwind_sheets_url", sheetsUrl);
+  } else {
+    localStorage.removeItem("utm_riverwind_sheets_url");
+  }
   document.getElementById("sheets-connected").style.display = "flex";
   document.getElementById("autolog-row").style.display = "flex";
   var btn = document.getElementById("save-sheets-btn");
@@ -619,6 +591,18 @@ fetch("https://script.google.com/macros/s/AKfycbzy3lCltzDdM3mWkCWS8M5jvhdtQDb0vW
   });
 
 updateHistoryTab();
+
+// Restore saved Sheets URL from localStorage
+(function() {
+  var saved = localStorage.getItem("utm_riverwind_sheets_url");
+  if (saved) {
+    sheetsUrl = saved;
+    document.getElementById("sheets-url-input").value = saved;
+    document.getElementById("sheets-connected").style.display = "flex";
+    document.getElementById("autolog-row").style.display = "flex";
+    updateHistoryTab();
+  }
+})();
 </script>
 </body>
 </html>
