@@ -263,7 +263,7 @@ const CAMPAIGN_PRESETS = [
 const CONTENT_BY_CAMPAIGN = {
   entertainment:  ["general","announce","onsale","reminder","onsalereminder","presale","upsell","reschedule","reply","postshow","package","cancellation","passporttosummer"],
   brandawareness: ["explorewinstar","general","gozone","wsapp","winstarwinners","passporttosummer","TCUoffer"],
-  gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","10kgames","rmg","offer","passporttosummer","clubpassport"],
+  gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","10kgames","rmg","offer","passporttosummer","clubpassport","influencer"],
   golf:           ["general","academy","courses","membership","proshop","golftournaments","clubhouse","signup","partnership","retail","passporttosummer"],
   hotel:          ["gaming","shuttle","reply","dining","wsapp","offer","passporttosummer"],
   amenities:      ["pool","dining","spa","shopping","events","gaming","shuttle","golf","clubpassport","mywinstar","giveaway","passporttosummer"],
@@ -273,13 +273,13 @@ const CONTENT_BY_CAMPAIGN = {
 const TERM_BY_CAMPAIGN = {
   entertainment:  ["video","reels","photo","carousel","link","stay","dining","still","motion","comment","dm"],
   brandawareness: ["permissionpass","giveaway","stadium"],
-  gaming:         ["poker","craps","palladium","comment","dm","mywinstar","spaoffer","invite","announcement","reminder","gamefinder","promotions","signup","benefits"],
+  gaming:         ["poker","craps","palladium","comment","dm","mywinstar","spaoffer","invite","announcement","reminder","gamefinder","promotions","signup","benefits","ladyluck"],
   golf:           ["teetime","instructors","giveaway","comment","dm"],
   hotel:          ["checkin","gamefinder","comment","dm"],
   amenities:      ["granvia","dcbg","lafleur","laparis","vino","ihop","chipsnales","bachelor","bachelorette","weddings","cascades","spaoffer","newmember","winstarwallet"]
 };
 
-const OTHER_IDENTIFIERS = ["video","reels","photo","carousel","link","still","motion"];
+const OTHER_IDENTIFIERS = ["video","reels","photo","carousel","link","still","motion","a"];
 // ─────────────────────────────────────────────
 
 const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Other\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.url, data.source, data.medium, data.campaign, data.content, data.term, data.other, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
