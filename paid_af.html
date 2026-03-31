@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>American Fidelity Paid UTM Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #020817; font-family: 'DM Sans', sans-serif; color: #e2e8f0; min-height: 100vh; padding: 32px 16px; }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::placeholder { color: #334155 !important; }
+    #app { max-width: 700px; margin: 0 auto; }
+    .header { margin-bottom: 24px; }
+    .header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .logo { width: 28px; height: 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    h1 { font-size: 20px; font-weight: 700; color: #f1f5f9; letter-spacing: -0.02em; }
+    .subtitle { font-size: 13px; color: #475569; }
+    .tabs { display: flex; gap: 3px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid #1e293b; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 7px 4px; border: none; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: all 0.15s; white-space: nowrap; background: transparent; color: #475569; }
+    .tab-btn.active { background: #1e293b; color: #f1f5f9; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .section { margin-bottom: 20px; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
+    .section-label span { font-size: 10px; font-weight: 400; color: #475569; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .preset-btn { padding: 5px 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #94a3b8; font-size: 12px; cursor: pointer; font-family: 'DM Mono', monospace; transition: all 0.15s; }
+    .preset-btn:hover { border-color: #6366f1; color: #c7d2fe; }
+    .preset-btn.active-sel { background: #6366f122; border-color: #6366f1; color: #c7d2fe; }
+    .preset-btn.campaign { border-color: #1e3a5f; color: #7dd3fc; font-family: 'DM Sans', sans-serif; }
+    .preset-btn.campaign:hover, .preset-btn.campaign.active-sel { background: #0c2a4a; border-color: #38bdf8; color: #e0f2fe; }
+    .preset-btn.content-btn { border-color: #2d1f4f; color: #a78bfa; }
+    .preset-btn.content-btn:hover, .preset-btn.content-btn.active-sel { background: #1e1040; border-color: #8b5cf6; color: #ddd6fe; }
+    .preset-btn.term-btn { border-color: #1a3040; color: #67e8f9; }
+    .preset-btn.term-btn:hover, .preset-btn.term-btn.active-sel { background: #0c2030; border-color: #22d3ee; color: #cffafe; }
+    .preset-btn.other-btn { border-color: #1a3020; color: #6ee7b7; }
+    .preset-btn.other-btn:hover, .preset-btn.other-btn.active-sel { background: #0c2018; border-color: #34d399; color: #d1fae5; }
+    .preset-btn.source-btn { border-color: #1e293b; color: #94a3b8; }
+    .preset-btn.source-btn:hover, .preset-btn.source-btn.active-sel { background: #1e293b22; border-color: #6366f1; color: #c7d2fe; }
+
+    .empty-hint { font-size: 12px; color: #334155; font-style: italic; padding: 4px 0; }
+
+    .card { background: #0a0f1e; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    .card.valid { border-color: #6366f133; }
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
+    .field .hint { font-size: 11px; color: #64748b; margin-top: 4px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    input[type="text"], input[type="url"] { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none; font-family: 'DM Mono', monospace; transition: border-color 0.15s; }
+    input[type="text"]:focus, input[type="url"]:focus { border-color: #6366f1; }
+    input.sans { font-family: 'DM Sans', sans-serif; }
+    select.styled { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none; font-family: 'DM Mono', monospace; transition: border-color 0.15s; margin-bottom: 6px; }
+    select.styled:focus { border-color: #6366f1; }
+
+    .toggle-row { display: flex; align-items: center; gap: 8px; }
+    .toggle { width: 36px; height: 20px; background: #1e293b; border-radius: 10px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
+    .toggle.on { background: #6366f1; }
+    .toggle-knob { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: #fff; border-radius: 50%; transition: left 0.2s; }
+    .toggle.on .toggle-knob { left: 19px; }
+    .toggle-label { font-size: 12px; color: #64748b; }
+
+    .url-preview { font-size: 12px; color: #94a3b8; word-break: break-all; font-family: 'DM Mono', monospace; line-height: 1.7; background: #020817; padding: 10px 12px; border-radius: 7px; border: 1px solid #1e293b; }
+    .preview-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .preview-label.valid { color: #6366f1; } .preview-label.invalid { color: #475569; }
+    .c-base { color: #e2e8f0; } .c-sep { color: #475569; } .c-key { color: #818cf8; } .c-val { color: #34d399; }
+
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .btn-primary { flex: 1; padding: 11px; border: none; border-radius: 9px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+    .btn-primary:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
+    .btn-primary.copied { background: #16a34a; }
+    .btn-secondary { padding: 11px 16px; background: #0f172a; border: 1px solid #1e293b; border-radius: 9px; color: #64748b; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .log-status { font-size: 12px; }
+    .log-status.ok { color: #22c55e; } .log-status.err { color: #f87171; } .log-status.loading { color: #818cf8; }
+
+    .history-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: #475569; }
+    .btn-ghost { font-size: 12px; padding: 4px 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #64748b; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .history-item { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+    .history-info { flex: 1; min-width: 0; }
+    .history-tags { font-size: 11px; color: #6366f1; font-weight: 600; margin-bottom: 3px; font-family: 'DM Mono', monospace; }
+    .history-url { font-size: 11px; color: #475569; word-break: break-all; font-family: 'DM Mono', monospace; }
+    .history-actions { display: flex; gap: 5px; flex-shrink: 0; }
+    .btn-mini { font-size: 11px; padding: 4px 8px; background: #1e293b; border: none; border-radius: 5px; color: #94a3b8; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .btn-mini.green { background: #22c55e22; color: #22c55e; }
+    .btn-mini.logged { background: #16a34a22; color: #22c55e; cursor: default; }
+    .empty-state { text-align: center; padding: 56px 0; color: #334155; }
+    .empty-icon { font-size: 36px; margin-bottom: 12px; }
+    .empty-text { font-size: 14px; }
+
+    .step-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+    .step-num { width: 22px; height: 22px; background: #6366f122; border: 1px solid #6366f144; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #818cf8; flex-shrink: 0; }
+    .step-text { font-size: 13px; color: #94a3b8; line-height: 1.5; padding-top: 2px; }
+    .code-block-wrap { position: relative; }
+    pre { background: #020817; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; font-size: 11px; color: #94a3b8; font-family: 'DM Mono', monospace; overflow-x: auto; white-space: pre-wrap; line-height: 1.7; }
+    .copy-code-btn { position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 3px 8px; background: #1e293b; border: 1px solid #334155; border-radius: 5px; color: #64748b; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .copy-code-btn.copied { background: #22c55e22; color: #22c55e; }
+    .sheets-connected { margin-top: 10px; font-size: 12px; color: #22c55e; display: flex; gap: 6px; align-items: center; }
+    .btn-full { width: 100%; padding: 10px; border: none; border-radius: 9px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+    .btn-full:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="header-row">
+      <div class="logo">&#9889;</div>
+      <h1>Newcastle Organic Social UTM Builder</h1>
+    </div>
+    <p class="subtitle">Generate, log, and manage organic social tracking links for Newcastle.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('builder')">Builder</button>
+    <button class="tab-btn" id="tab-history" onclick="switchTab('history')">History</button>
+    <button class="tab-btn" id="tab-sheets" onclick="switchTab('sheets')">Sheets</button>
+  </div>
+
+  <div id="panel-builder" class="panel active">
+
+    <div class="card">
+      <div class="field" style="margin-bottom:0">
+        <label>Destination URL *</label>
+        <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section">
+        <div class="section-label">Campaign <span>select one</span></div>
+        <div class="btn-row" id="campaign-btns"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Post Type <span>fills source</span></div>
+        <div class="btn-row" id="source-btns"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Content <span>based on campaign</span></div>
+        <div class="btn-row" id="content-btns"><span class="empty-hint">Select a campaign first</span></div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Term <span>based on campaign</span></div>
+        <div class="btn-row" id="term-btns"><span class="empty-hint">Select a campaign first</span></div>
+      </div>
+
+      <div class="section" id="other-section" style="margin-bottom:0">
+        <div class="section-label">Other Identifiers <span id="other-hint">based on campaign</span></div>
+        <div class="btn-row" id="other-btns"><span class="empty-hint">Select a campaign first</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="grid-2">
+        <div class="field">
+          <label>Medium *</label>
+          <input type="text" id="f-medium" value="paid" oninput="updatePreview()" />
+          <div class="hint">Pre-filled as paid</div>
+        </div>
+        <div class="field">
+          <label>Source *</label>
+          <input type="text" id="f-source" placeholder="select Post Type above" oninput="updatePreview()" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Campaign *</label>
+          <input type="text" id="f-campaign" placeholder="select Campaign above" oninput="updateCampaignDynamic(); updatePreview()" />
+        </div>
+        <div class="field">
+          <label>Content</label>
+          <input type="text" id="f-content" placeholder="select or type" oninput="updatePreview()" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field" style="margin-bottom:0">
+          <label>Term</label>
+          <input type="text" id="f-term" placeholder="select or type" oninput="updatePreview()" />
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Other Identifier</label>
+          <input type="text" id="f-other" placeholder="select or type" oninput="updatePreview()" />
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+      <div class="toggle-row">
+        <div class="toggle on" id="toggle-slug" onclick="toggleSlug()"><div class="toggle-knob"></div></div>
+        <span class="toggle-label">Auto-format (lowercase + hyphens)</span>
+      </div>
+      <div class="toggle-row" id="autolog-row" style="display:none">
+        <div class="toggle" id="toggle-autolog" onclick="toggleAutoLog()"><div class="toggle-knob"></div></div>
+        <span class="toggle-label">Auto-log to Sheets on copy</span>
+      </div>
+    </div>
+
+    <div class="card" id="preview-card" style="display:none">
+      <div class="preview-label" id="preview-label"></div>
+      <div class="url-preview" id="url-preview"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="copy-btn" onclick="handleCopy()" disabled>Copy URL</button>
+      <span class="log-status" id="log-status" style="display:none"></span>
+      <button class="btn-secondary" onclick="resetForm()">Reset</button>
+    </div>
+
+  </div>
+
+  <div id="panel-history" class="panel">
+    <div id="history-list"></div>
+  </div>
+
+  <div id="panel-sheets" class="panel">
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:4px;">Connect Google Sheets</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:16px;line-height:1.6;">Log every UTM automatically to a Google Sheet. Takes ~3 minutes to set up.</div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-text">Create a new Google Sheet.</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-text">Go to <strong>Extensions &rarr; Apps Script</strong>. Paste the code below and save.</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-text">Click <strong>Deploy &rarr; New deployment &rarr; Web app</strong>. Set "Execute as: Me" and "Who has access: Anyone". Deploy and authorize.</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-text">Copy the <strong>Web App URL</strong> and paste it below.</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;">Apps Script Code</div>
+      <div class="code-block-wrap">
+        <pre id="apps-script-code"></pre>
+        <button class="copy-code-btn" id="copy-script-btn" onclick="copyScript()">Copy</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label>Your Web App URL</label>
+        <input type="url" id="sheets-url-input" class="sans" placeholder="https://script.google.com/macros/s/.../exec" oninput="updateSaveBtn()" />
+      </div>
+      <button class="btn-full" id="save-sheets-btn" onclick="saveSheets()" disabled>Save &amp; Connect</button>
+      <div class="sheets-connected" id="sheets-connected" style="display:none">&#10003; Connected</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────
+const SOURCES = ["google","linkedin","digitalremedy","facebook"];
+
+const CAMPAIGN_PRESETS = [
+  { label: "Brand Awareness", campaign: "brandawareness"},
+  { label: "Pre-Enrollment",  campaign: "preenroll"},
+  { label: "Manufacturing",   campaign: "manufacturing"},
+  { label: "Acquisition",     campaign: "acquisition"},
+  { label: "Brand Awareness - Cross Network",  campaign: "brandawareness_cn"},
+  { label: "Manufacturing - Cross Network",  campaign: "manufacturing_cn"},
+  { label: "Conferences & Webinars",  campaign: "conferences_webinars"},
+  { label: "Healthcare",  campaign: "healthcare"},
+  { label: "Education",  campaign: "education"},
+  { label: "PFML",  campaign: "pfml"},
+  { label: "Education - Cross Network",  campaign: "education_cn"},
+  { label: "RFP",  campaign: "rfp"},
+  { label: "PFML - Cross Network",  campaign: "pfml_cn"},
+  { label: "Healthcare - Cross Network",  campaign: "healthcare_cn"}
+];
+
+const CONTENT_BY_CAMPAIGN = {
+  brandawareness:       ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  preenroll:            ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  manufacturing:        ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  acquisition:          ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  brandawareness_cn:    ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  manufacturing_cn:     ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  conferences_webinars: ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  healthcare:           ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  education:            ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  pfml:                 ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  education_cn:         ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  rfp:                  ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  pfml_cn:              ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"],
+  healthcare_cn:        ["general","clickads","video","ott","display,"demandgen","pmax","trueview","leadform"]
+};
+
+const TERM_BY_CAMPAIGN = {
+  brandawareness:       ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  preenroll:            ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  manufacturing:        ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  acquisition:          ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  brandawareness_cn:    ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  manufacturing_cn:     ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  conferences_webinars: ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  healthcare:           ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  education:            ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  pfml:                 ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  education_cn:         ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  rfp:                  ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  pfml_cn:              ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"],
+  healthcare_cn:        ["general","prospecting","retargeting","seiu","maryland,"asbo","atlanta","okc","comanche","aaspa","basa","mac","kern","musc","benefits"]
+};
+
+const OTHER_IDENTIFIERS = [];
+// ─────────────────────────────────────────────
+
+const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Other\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.url, data.source, data.medium, data.campaign, data.content, data.term, data.other, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
+
+let autoSlug = true, autoLog = false, sheetsUrl = "", history = [];
+let artistList = [];
+
+document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
+
+// ── STATIC BUTTON ROWS ────────────────────────
+
+SOURCES.forEach(function(s) {
+  var btn = document.createElement("button");
+  btn.className = "preset-btn source-btn";
+  btn.textContent = s;
+  btn.onclick = function() {
+    setActive("source-btns", btn);
+    document.getElementById("f-source").value = s;
+    updatePreview();
+  };
+  document.getElementById("source-btns").appendChild(btn);
+});
+
+CAMPAIGN_PRESETS.forEach(function(p) {
+  var btn = document.createElement("button");
+  btn.className = "preset-btn campaign";
+  btn.textContent = p.label;
+  btn.onclick = function() {
+    setActive("campaign-btns", btn);
+    document.getElementById("f-campaign").value = p.campaign;
+    updateCampaignDynamic();
+    updatePreview();
+  };
+  document.getElementById("campaign-btns").appendChild(btn);
+});
+
+// ── DYNAMIC BUTTON ROWS ───────────────────────
+
+function updateCampaignDynamic() {
+  var campaign = document.getElementById("f-campaign").value.trim().toLowerCase();
+
+  renderBtnRow("content-btns", CONTENT_BY_CAMPAIGN[campaign] || [], "content-btn", function(val) {
+    document.getElementById("f-content").value = val;
+    updatePreview();
+  }, "f-content");
+
+  renderBtnRow("term-btns", TERM_BY_CAMPAIGN[campaign] || [], "term-btn", function(val) {
+    document.getElementById("f-term").value = val;
+    updatePreview();
+  }, "f-term");
+
+  var otherHint = document.getElementById("other-hint");
+  var otherContainer = document.getElementById("other-btns");
+
+  if (campaign === "entertainment") {
+    otherHint.textContent = "artist — from sheet";
+    otherContainer.innerHTML = "";
+    var sel = document.createElement("select");
+    sel.className = "styled";
+    sel.style.maxWidth = "300px";
+    var defaultOpt = document.createElement("option");
+    defaultOpt.value = "";
+    defaultOpt.textContent = artistList.length ? "-- Select artist --" : "Loading artists...";
+    sel.appendChild(defaultOpt);
+    artistList.forEach(function(a) {
+      var opt = document.createElement("option");
+      opt.value = a.code; opt.textContent = a.name;
+      sel.appendChild(opt);
+    });
+    sel.onchange = function() {
+      document.getElementById("f-other").value = this.value;
+      updatePreview();
+    };
+    otherContainer.appendChild(sel);
+  } else {
+    otherHint.textContent = "format type";
+    renderBtnRow("other-btns", OTHER_IDENTIFIERS, "other-btn", function(val) {
+      document.getElementById("f-other").value = val;
+      updatePreview();
+    }, "f-other");
+  }
+
+  document.getElementById("f-content").value = "";
+  document.getElementById("f-term").value = "";
+  document.getElementById("f-other").value = "";
+}
+
+function renderBtnRow(containerId, values, btnClass, onClickFn, fieldId) {
+  var container = document.getElementById(containerId);
+  container.innerHTML = "";
+  if (!values || values.length === 0) {
+    container.innerHTML = '<span class="empty-hint">No presets for this campaign</span>';
+    return;
+  }
+  values.forEach(function(val) {
+    var btn = document.createElement("button");
+    btn.className = "preset-btn " + btnClass;
+    btn.textContent = val;
+    btn.onclick = function() {
+      setActive(containerId, btn);
+      document.getElementById(fieldId).value = val;
+      onClickFn(val);
+    };
+    container.appendChild(btn);
+  });
+}
+
+function setActive(containerId, activeBtn) {
+  var container = document.getElementById(containerId);
+  container.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
+  activeBtn.classList.add("active-sel");
+}
+
+// ── CORE FUNCTIONS ────────────────────────────
+
+function slugify(str) { return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, ""); }
+function fmt(v) { return autoSlug ? slugify(v) : v; }
+
+function getFields() {
+  return {
+    url:      document.getElementById("f-url").value.trim(),
+    source:   document.getElementById("f-source").value.trim(),
+    medium:   document.getElementById("f-medium").value.trim(),
+    campaign: document.getElementById("f-campaign").value.trim(),
+    content:  document.getElementById("f-content").value.trim(),
+    term:     document.getElementById("f-term").value.trim(),
+    other:    document.getElementById("f-other").value.trim()
+  };
+}
+
+function buildURL() {
+  var f = getFields();
+  if (!f.url) return { url: "", full: "", params: {} };
+  var params = new URLSearchParams();
+  if (f.source)   params.set("utm_source",   fmt(f.source));
+  if (f.medium)   params.set("utm_medium",   fmt(f.medium));
+  if (f.campaign) params.set("utm_campaign", fmt(f.campaign));
+  if (f.content)  params.set("utm_content",  fmt(f.content));
+  if (f.term)     params.set("utm_term",     fmt(f.term));
+  if (f.other)    params.set("utm_other",    fmt(f.other));
+  var qs = params.toString();
+  var base = f.url.includes("?") ? f.url + "&" : f.url + "?";
+  return { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, content: f.content, term: f.term, other: f.other, params: Object.fromEntries(params), full: qs ? base + qs : f.url };
+}
+
+function isValid() {
+  var f = getFields();
+  return !!(f.url && f.source && f.medium && f.campaign);
+}
+
+function updatePreview() {
+  var valid = isValid();
+  document.getElementById("copy-btn").disabled = !valid;
+  var built = buildURL();
+  var previewCard = document.getElementById("preview-card");
+  if (!built.url) { previewCard.style.display = "none"; return; }
+  previewCard.style.display = "block";
+  previewCard.className = "card" + (valid ? " valid" : "");
+  var label = document.getElementById("preview-label");
+  label.textContent = valid ? "Generated URL" : "Preview - complete required fields";
+  label.className = "preview-label " + (valid ? "valid" : "invalid");
+  var parts = built.full.split("?");
+  var html = '<span class="c-base">' + parts[0] + '</span>';
+  if (parts[1]) {
+    html += '<span class="c-sep">?</span>';
+    parts[1].split("&").forEach(function(part, i) {
+      var kv = part.split("=");
+      if (i > 0) html += '<span class="c-sep">&amp;</span>';
+      html += '<span class="c-key">' + kv[0] + '</span><span class="c-sep">=</span><span class="c-val">' + decodeURIComponent(kv[1] || "") + '</span>';
+    });
+  }
+  document.getElementById("url-preview").innerHTML = html;
+}
+
+async function handleCopy() {
+  if (!isValid()) return;
+  var built = buildURL();
+  navigator.clipboard.writeText(built.full);
+  var btn = document.getElementById("copy-btn");
+  btn.textContent = "Copied!"; btn.classList.add("copied");
+  setTimeout(function() { btn.textContent = "Copy URL"; btn.classList.remove("copied"); }, 2000);
+  var entry = { url: built.full, baseUrl: built.url, params: { utm_source: built.source, utm_medium: built.medium, utm_campaign: built.campaign, utm_content: built.content, utm_term: built.term, utm_other: built.other }, ts: Date.now(), logged: false };
+  if (sheetsUrl && autoLog) {
+    showLogStatus("loading", "Logging...");
+    var ok = await logToSheets(entry);
+    entry.logged = ok;
+    showLogStatus(ok ? "ok" : "err", ok ? "Logged to Sheet" : "Sheet error");
+    setTimeout(function() { document.getElementById("log-status").style.display = "none"; }, 3000);
+  }
+  history.unshift(entry);
+  if (history.length > 20) history.pop();
+  updateHistoryTab();
+}
+
+function showLogStatus(type, msg) {
+  var el = document.getElementById("log-status");
+  el.style.display = "inline"; el.className = "log-status " + type; el.textContent = msg;
+}
+
+async function logToSheets(entry) {
+  if (!sheetsUrl) return false;
+  try {
+    await fetch(sheetsUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: entry.baseUrl, source: entry.params.utm_source, medium: entry.params.utm_medium, campaign: entry.params.utm_campaign, content: entry.params.utm_content || "", term: entry.params.utm_term || "", other: entry.params.utm_other || "", fullUrl: entry.url }) });
+    return true;
+  } catch(e) { return false; }
+}
+
+function resetForm() {
+  ["f-url","f-source","f-campaign","f-content","f-term","f-other"].forEach(function(id) { document.getElementById(id).value = ""; });
+  document.getElementById("f-medium").value = "social";
+  document.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
+  document.getElementById("content-btns").innerHTML = '<span class="empty-hint">Select a campaign first</span>';
+  document.getElementById("term-btns").innerHTML = '<span class="empty-hint">Select a campaign first</span>';
+  document.getElementById("other-btns").innerHTML = '<span class="empty-hint">Select a campaign first</span>';
+  document.getElementById("other-hint").textContent = "based on campaign";
+  document.getElementById("preview-card").style.display = "none";
+  document.getElementById("copy-btn").disabled = true;
+  document.getElementById("log-status").style.display = "none";
+}
+
+function toggleSlug() { autoSlug = !autoSlug; document.getElementById("toggle-slug").classList.toggle("on", autoSlug); updatePreview(); }
+function toggleAutoLog() { autoLog = !autoLog; document.getElementById("toggle-autolog").classList.toggle("on", autoLog); }
+
+function updateHistoryTab() {
+  var el = document.getElementById("history-list");
+  document.getElementById("tab-history").textContent = history.length ? "History (" + history.length + ")" : "History";
+  if (history.length === 0) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128203;</div><div class="empty-text">No UTMs generated yet.</div></div>'; return; }
+  var rows = history.map(function(item, i) {
+    var truncUrl = item.url.length > 72 ? item.url.slice(0, 72) + "..." : item.url;
+    var sheetBtn = sheetsUrl ? '<button class="btn-mini' + (item.logged ? " logged" : "") + '" id="hlog-' + i + '" onclick="logHistoryItem(' + i + ')">' + (item.logged ? "Logged" : "Sheet") + '</button>' : "";
+    return '<div class="history-item"><div class="history-info"><div class="history-tags">' + (item.params.utm_source||"") + ' / ' + (item.params.utm_medium||"") + ' / ' + (item.params.utm_campaign||"") + '</div><div class="history-url">' + truncUrl + '</div></div><div class="history-actions"><button class="btn-mini" onclick="loadHistory(' + i + ')">Load</button><button class="btn-mini" id="hcopy-' + i + '" onclick="copyHistoryItem(' + i + ')">Copy</button>' + sheetBtn + '</div></div>';
+  });
+  el.innerHTML = '<div class="history-meta"><span>' + history.length + ' link' + (history.length !== 1 ? "s" : "") + ' this session</span><button class="btn-ghost" onclick="clearHistory()">Clear all</button></div>' + rows.join("");
+}
+
+function clearHistory() { history = []; updateHistoryTab(); }
+
+function copyHistoryItem(i) {
+  navigator.clipboard.writeText(history[i].url);
+  var btn = document.getElementById("hcopy-" + i);
+  btn.textContent = "Copied"; btn.classList.add("green");
+  setTimeout(function() { btn.textContent = "Copy"; btn.classList.remove("green"); }, 1500);
+}
+
+async function logHistoryItem(i) {
+  if (history[i].logged) return;
+  var btn = document.getElementById("hlog-" + i);
+  btn.textContent = "...";
+  var ok = await logToSheets(history[i]);
+  if (ok) { history[i].logged = true; btn.textContent = "Logged"; btn.classList.add("logged"); }
+  else { btn.textContent = "Sheet"; }
+}
+
+function loadHistory(i) {
+  var item = history[i];
+  document.getElementById("f-url").value = item.baseUrl || item.url.split("?")[0];
+  document.getElementById("f-source").value = item.params.utm_source || "";
+  document.getElementById("f-medium").value = item.params.utm_medium || "social";
+  document.getElementById("f-campaign").value = item.params.utm_campaign || "";
+  document.getElementById("f-content").value = item.params.utm_content || "";
+  document.getElementById("f-term").value = item.params.utm_term || "";
+  document.getElementById("f-other").value = item.params.utm_other || "";
+  updateCampaignDynamic();
+  switchTab("builder"); updatePreview();
+}
+
+function updateSaveBtn() { document.getElementById("save-sheets-btn").disabled = !document.getElementById("sheets-url-input").value.trim(); }
+
+function saveSheets() {
+  sheetsUrl = document.getElementById("sheets-url-input").value.trim();
+  if (sheetsUrl) {
+    localStorage.setItem("utm_riverwind_sheets_url", sheetsUrl);
+  } else {
+    localStorage.removeItem("utm_riverwind_sheets_url");
+  }
+  document.getElementById("sheets-connected").style.display = "flex";
+  document.getElementById("autolog-row").style.display = "flex";
+  var btn = document.getElementById("save-sheets-btn");
+  btn.textContent = "Saved!";
+  setTimeout(function() { btn.textContent = "Save & Connect"; }, 2000);
+  updateHistoryTab();
+}
+
+function copyScript() {
+  navigator.clipboard.writeText(APPS_SCRIPT);
+  var btn = document.getElementById("copy-script-btn");
+  btn.textContent = "Copied"; btn.classList.add("copied");
+  setTimeout(function() { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 2000);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll(".tab-btn").forEach(function(btn, i) { btn.classList.toggle("active", ["builder","history","sheets"][i] === tab); });
+  document.querySelectorAll(".panel").forEach(function(p) { p.classList.remove("active"); });
+  document.getElementById("panel-" + tab).classList.add("active");
+  if (tab === "history") updateHistoryTab();
+}
+
+updateHistoryTab();
+
+// Restore saved Sheets URL from localStorage
+(function() {
+  var saved = localStorage.getItem("utm_riverwind_sheets_url");
+  if (saved) {
+    sheetsUrl = saved;
+    document.getElementById("sheets-url-input").value = saved;
+    document.getElementById("sheets-connected").style.display = "flex";
+    document.getElementById("autolog-row").style.display = "flex";
+    updateHistoryTab();
+  }
+})();
+</script>
+</body>
+</html>
