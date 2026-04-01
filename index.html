@@ -275,6 +275,12 @@ const CLIENTS = [
   { label: "Quvia",          code: "quvia" }
 ];
 
+// Per-client artist feed URLs (only clients with entertainment/artist dropdown need one)
+const ARTIST_FEED_URLS = {
+  ws: "https://script.google.com/macros/s/AKfycbxG2_S7Q0uyow0_25nOt8cleBkWTlwpJ9XJDpXoXIhuN69mbhsxpHVx0redJjmWMxg9Tg/exec?callback=handleArtists",
+  rw: "https://script.google.com/macros/s/AKfycbxUshCx5hj5Chj_nsalvL7f1rNqw26HhPuVnwj4k_Duq0LJJxsZ0Wlft5p_SJS7I6Hf/exec?callback=handleArtists"
+};
+
 const CLIENT_CONFIG = {
   ws: {
     drivers: [
@@ -344,10 +350,42 @@ const CLIENT_CONFIG = {
 const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"Client\",\"Email Name\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.client || \"\", data.emailName || \"\", data.url, data.source, data.medium, data.campaign, data.content, data.term, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
 
 let autoSlug = true, autoLog = false, sheetsUrl = "", history = [];
-let artistList = [];
+// Per-client artist cache: { ws: [...], rw: [...] }
+let artistCache = {};
 let en = { client: "", clientCode: "", driver: "", driverConfig: null, emailType: "", content: "", desc: "", type2: "", month: "" };
 
 document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
+
+// ── ARTIST LOADING (per-client) ───────────────
+
+function loadArtistsForClient(clientCode) {
+  var url = ARTIST_FEED_URLS[clientCode];
+  if (!url) return; // no artist feed for this client
+  if (artistCache[clientCode]) return; // already loaded
+  // inject a JSONP script tag; response calls handleArtists(data)
+  // We need to know which client the response is for, so we temporarily
+  // tag the pending client code on a flag the callback can read.
+  window.__pendingArtistClient = clientCode;
+  var script = document.createElement("script");
+  script.src = url;
+  document.body.appendChild(script);
+}
+
+function handleArtists(artists) {
+  var clientCode = window.__pendingArtistClient || "";
+  if (clientCode) {
+    artistCache[clientCode] = artists;
+    window.__pendingArtistClient = null;
+  }
+  // If the currently selected client+driver is waiting for this data, re-render
+  if (en.clientCode === clientCode && en.driverConfig && en.driverConfig.desc === "artist_dropdown") {
+    renderEnDescBtns(en.driverConfig);
+  }
+}
+
+function getArtistList(clientCode) {
+  return artistCache[clientCode] || [];
+}
 
 // ── CLIENT BUTTONS ────────────────────────────
 CLIENTS.forEach(function(c) {
@@ -360,6 +398,8 @@ CLIENTS.forEach(function(c) {
     en.clientCode = c.code;
     en.driver = ""; en.driverConfig = null;
     en.emailType = ""; en.content = ""; en.desc = ""; en.type2 = "";
+    // Pre-fetch artist list for this client if it has one
+    loadArtistsForClient(c.code);
     renderDriverBtns(c.code);
     renderEmailTypeBtns();
     document.getElementById("en-content-btns").innerHTML = '<span class="empty-hint">Select a business driver first</span>';
@@ -423,13 +463,14 @@ function renderEnDescBtns(d) {
   container.innerHTML = "";
   en.desc = "";
   if (d.desc === "artist_dropdown") {
+    var artists = getArtistList(en.clientCode);
     var sel = document.createElement("select");
     sel.className = "styled"; sel.style.maxWidth = "300px";
     var defOpt = document.createElement("option");
     defOpt.value = "";
-    defOpt.textContent = artistList.length ? "-- Select artist --" : "Loading artists...";
+    defOpt.textContent = artists.length ? "-- Select artist --" : "Loading artists...";
     sel.appendChild(defOpt);
-    artistList.forEach(function(a) {
+    artists.forEach(function(a) {
       var opt = document.createElement("option");
       opt.value = a.code; opt.textContent = a.name;
       sel.appendChild(opt);
@@ -711,19 +752,6 @@ function setActive(containerId, activeBtn) {
   activeBtn.classList.add("active-sel");
 }
 
-// Load artists via JSONP
-function loadArtists() {
-  var script = document.createElement("script");
-  script.src = "https://script.google.com/macros/s/AKfycbxUshCx5hj5Chj_nsalvL7f1rNqw26HhPuVnwj4k_Duq0LJJxsZ0Wlft5p_SJS7I6Hf/exec?callback=handleArtists";
-  document.body.appendChild(script);
-}
-
-function handleArtists(artists) {
-  artistList = artists;
-  if (en.driverConfig && en.driverConfig.desc === "artist_dropdown") renderEnDescBtns(en.driverConfig);
-}
-
-loadArtists();
 buildEmailName();
 updateHistoryTab();
 
