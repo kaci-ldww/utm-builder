@@ -711,23 +711,10 @@ function setActive(containerId, activeBtn) {
   activeBtn.classList.add("active-sel");
 }
 
-function getArtistEndpoint() {
-  if (en.clientCode === "ws") {
-    return "https://script.google.com/macros/s/AKfycbxG2_S7Q0uyow0_25nOt8cleBkWTlwpJ9XJDpXoXIhuN69mbhsxpHVx0redJjmWMxg9Tg/exec?callback=handleArtists";
-  }
-  if (en.clientCode === "rw") {
-    return "https://script.google.com/macros/s/AKfycbxUshCx5hj5Chj_nsalvL7f1rNqw26HhPuVnwj4k_Duq0LJJxsZ0Wlft5p_SJS7I6Hf/exec?callback=handleArtists";
-  }
-  return null; // no artist dropdown for other clients
-}
-
 // Load artists via JSONP
 function loadArtists() {
-  var endpoint = getArtistEndpoint();
-  if (!endpoint) return;
-
   var script = document.createElement("script");
-  script.src = endpoint;
+  script.src = "https://script.google.com/macros/s/AKfycbxUshCx5hj5Chj_nsalvL7f1rNqw26HhPuVnwj4k_Duq0LJJxsZ0Wlft5p_SJS7I6Hf/exec?callback=handleArtists";
   document.body.appendChild(script);
 }
 
