@@ -307,7 +307,7 @@ const OTHER_IDENTIFIERS = [];
 
 const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Other\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.url, data.source, data.medium, data.campaign, data.content, data.term, data.other, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
 
-let autoSlug = true, autoLog = false, sheetsUrl = "", history = [];
+let autoSlug = true, autoLog = false, sheetsUrl = "https://script.google.com/macros/s/AKfycbzVlcrnLa_l6mQFtC0VG8dRbdDMX_Mutvyv61BoUjk_R413XxQg7ZnyIulXve94BgYa5g/exec", history = [];
 let artistList = [];
 
 document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
@@ -605,14 +605,9 @@ updateHistoryTab();
 
 // Restore saved Sheets URL from localStorage
 (function() {
-  var saved = localStorage.getItem("utm_riverwind_sheets_url");
-  if (saved) {
-    sheetsUrl = saved;
-    document.getElementById("sheets-url-input").value = saved;
-    document.getElementById("sheets-connected").style.display = "flex";
-    document.getElementById("autolog-row").style.display = "flex";
-    updateHistoryTab();
-  }
+  document.getElementById("sheets-url-input").value = sheetsUrl;
+  document.getElementById("sheets-connected").style.display = "flex";
+  document.getElementById("autolog-row").style.display = "flex";
 })();
 </script>
 </body>
