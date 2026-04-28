@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTM Builder — VPP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #020817; font-family: 'DM Sans', sans-serif; color: #e2e8f0; min-height: 100vh; padding: 32px 16px 64px; }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::placeholder { color: #334155 !important; }
+    #app { max-width: 860px; margin: 0 auto; }
+    .header { margin-bottom: 24px; }
+    .header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .logo { width: 28px; height: 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    h1 { font-size: 20px; font-weight: 700; color: #f1f5f9; letter-spacing: -0.02em; }
+    .subtitle { font-size: 13px; color: #475569; }
+    .tabs { display: flex; gap: 3px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid #1e293b; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 7px 4px; border: none; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: all 0.15s; white-space: nowrap; background: transparent; color: #475569; }
+    .tab-btn.active { background: #1e293b; color: #f1f5f9; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .card { background: #0a0f1e; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    .card.valid { border-color: #6366f133; }
+    .section { margin-bottom: 18px; }
+    .section:last-child { margin-bottom: 0; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
+    .section-label span { font-size: 10px; font-weight: 400; color: #475569; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .preset-btn { padding: 5px 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #94a3b8; font-size: 12px; cursor: pointer; font-family: 'DM Mono', monospace; transition: all 0.15s; }
+    .preset-btn:hover { border-color: #6366f1; color: #c7d2fe; }
+    .preset-btn.active-sel { background: #6366f122; border-color: #6366f1; color: #c7d2fe; }
+    .preset-btn.campaign-btn { border-color: #1e3a5f; color: #7dd3fc; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+    .preset-btn.campaign-btn:hover, .preset-btn.campaign-btn.active-sel { background: #0c2a4a; border-color: #38bdf8; color: #e0f2fe; }
+    .preset-btn.medium-btn { border-color: #2d1f4f; color: #a78bfa; }
+    .preset-btn.medium-btn:hover, .preset-btn.medium-btn.active-sel { background: #1e1040; border-color: #8b5cf6; color: #ddd6fe; }
+    .preset-btn.source-btn { border-color: #1a3040; color: #67e8f9; }
+    .preset-btn.source-btn:hover, .preset-btn.source-btn.active-sel { background: #0c2030; border-color: #22d3ee; color: #cffafe; }
+    .preset-btn.content-btn { border-color: #1a3020; color: #6ee7b7; }
+    .preset-btn.content-btn:hover, .preset-btn.content-btn.active-sel { background: #0c2018; border-color: #34d399; color: #d1fae5; }
+    .preset-btn.term-btn { border-color: #3a2010; color: #fbbf24; }
+    .preset-btn.term-btn:hover, .preset-btn.term-btn.active-sel { background: #2a1808; border-color: #f59e0b; color: #fde68a; }
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
+    .field .hint { font-size: 11px; color: #64748b; margin-top: 4px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    input[type="text"], input[type="url"] { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none; font-family: 'DM Mono', monospace; transition: border-color 0.15s; }
+    input[type="text"]:focus, input[type="url"]:focus { border-color: #6366f1; }
+    .toggle-row { display: flex; align-items: center; gap: 8px; }
+    .toggle { width: 36px; height: 20px; background: #1e293b; border-radius: 10px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
+    .toggle.on { background: #6366f1; }
+    .toggle-knob { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: #fff; border-radius: 50%; transition: left 0.2s; }
+    .toggle.on .toggle-knob { left: 19px; }
+    .toggle-label { font-size: 12px; color: #64748b; }
+    .url-preview { font-size: 12px; color: #94a3b8; word-break: break-all; font-family: 'DM Mono', monospace; line-height: 1.7; background: #020817; padding: 10px 12px; border-radius: 7px; border: 1px solid #1e293b; }
+    .preview-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .preview-label.valid { color: #6366f1; } .preview-label.invalid { color: #475569; }
+    .c-base { color: #e2e8f0; } .c-sep { color: #475569; } .c-key { color: #818cf8; } .c-val { color: #34d399; }
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .btn-primary { flex: 1; padding: 11px; border: none; border-radius: 9px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+    .btn-primary:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
+    .btn-primary.copied { background: #16a34a; }
+    .btn-secondary { padding: 11px 16px; background: #0f172a; border: 1px solid #1e293b; border-radius: 9px; color: #64748b; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+    /* History table */
+    .history-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .history-count { font-size: 13px; color: #475569; }
+    .btn-ghost { font-size: 12px; padding: 5px 12px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; color: #64748b; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .btn-ghost:hover { border-color: #475569; color: #94a3b8; }
+    .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #1e293b; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead tr { background: #0f172a; }
+    th { padding: 10px 12px; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #475569; white-space: nowrap; border-bottom: 1px solid #1e293b; }
+    td { padding: 10px 12px; border-bottom: 1px solid #0f172a; vertical-align: top; color: #94a3b8; font-family: 'DM Mono', monospace; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #0f172a44; }
+    td.url-cell { max-width: 260px; word-break: break-all; color: #64748b; font-size: 11px; }
+    td.ts-cell { white-space: nowrap; color: #334155; font-size: 11px; }
+    td.param-cell { color: #34d399; }
+    .copy-cell { width: 60px; }
+    .btn-copy-row { font-size: 11px; padding: 3px 8px; background: #1e293b; border: none; border-radius: 5px; color: #94a3b8; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; white-space: nowrap; }
+    .btn-copy-row:hover { background: #6366f122; color: #c7d2fe; }
+    .btn-copy-row.copied { background: #22c55e22; color: #22c55e; }
+    .empty-state { text-align: center; padding: 56px 0; color: #334155; }
+    .empty-icon { font-size: 36px; margin-bottom: 12px; }
+    .empty-text { font-size: 14px; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="header-row">
+      <div class="logo">&#9889;</div>
+      <h1>UTM Builder — VPP</h1>
+    </div>
+    <p class="subtitle">Generate and track UTM links for VPP campaigns.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('builder')">Builder</button>
+    <button class="tab-btn" id="tab-history" onclick="switchTab('history')">History</button>
+  </div>
+
+  <!-- BUILDER -->
+  <div id="panel-builder" class="panel active">
+
+    <div class="card">
+      <div class="field" style="margin-bottom:0">
+        <label>Destination URL *</label>
+        <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
+      </div>
+    </div>
+
+    <div class="card">
+
+      <div class="section">
+        <div class="section-label">Campaign <span>required</span></div>
+        <div class="btn-row">
+          <button class="preset-btn campaign-btn" onclick="setField(this,'f-campaign','brandawareness','campaign-btn')">Brand Awareness</button>
+          <button class="preset-btn campaign-btn" onclick="setField(this,'f-campaign','uyp','campaign-btn')">UYP</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Medium <span>required</span></div>
+        <div class="btn-row">
+          <button class="preset-btn medium-btn" onclick="setField(this,'f-medium','paid','medium-btn')">paid</button>
+          <button class="preset-btn medium-btn" onclick="setField(this,'f-medium','traditional','medium-btn')">traditional</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Source <span>required</span></div>
+        <div class="btn-row">
+          <button class="preset-btn source-btn" onclick="setField(this,'f-source','google','source-btn')">google</button>
+          <button class="preset-btn source-btn" onclick="setField(this,'f-source','linkedin','source-btn')">linkedin</button>
+          <button class="preset-btn source-btn" onclick="setField(this,'f-source','facebook','source-btn')">facebook</button>
+          <button class="preset-btn source-btn" onclick="setField(this,'f-source','directmail','source-btn')">directmail</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Content <span>optional</span></div>
+        <div class="btn-row">
+          <button class="preset-btn content-btn" onclick="toggleField(this,'f-content','wca','content-btn')">wca</button>
+          <button class="preset-btn content-btn" onclick="toggleField(this,'f-content','conversion','content-btn')">conversion</button>
+          <button class="preset-btn content-btn" onclick="toggleField(this,'f-content','promotedpost','content-btn')">promotedpost</button>
+          <button class="preset-btn content-btn" onclick="toggleField(this,'f-content','video','content-btn')">video</button>
+        </div>
+      </div>
+
+      <div class="section" style="margin-bottom:0">
+        <div class="section-label">Term <span>optional</span></div>
+        <div class="btn-row">
+          <button class="preset-btn term-btn" onclick="toggleField(this,'f-term','retargeting','term-btn')">retargeting</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="grid-3" style="margin-bottom:14px;">
+        <div class="field" style="margin-bottom:0">
+          <label>Campaign *</label>
+          <input type="text" id="f-campaign" placeholder="select above" oninput="updatePreview()" />
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Medium *</label>
+          <input type="text" id="f-medium" placeholder="select above" oninput="updatePreview()" />
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Source *</label>
+          <input type="text" id="f-source" placeholder="select above" oninput="updatePreview()" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field" style="margin-bottom:0">
+          <label>Content</label>
+          <input type="text" id="f-content" placeholder="select above or type" oninput="updatePreview()" />
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Term</label>
+          <input type="text" id="f-term" placeholder="select above or type" oninput="updatePreview()" />
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div class="toggle-row">
+        <div class="toggle on" id="toggle-slug" onclick="toggleSlug()"><div class="toggle-knob"></div></div>
+        <span class="toggle-label">Auto-format (lowercase + hyphens)</span>
+      </div>
+    </div>
+
+    <div class="card" id="preview-card" style="display:none;margin-bottom:16px;">
+      <div class="preview-label" id="preview-label"></div>
+      <div class="url-preview" id="url-preview"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="copy-btn" onclick="handleCopy()" disabled>Copy URL</button>
+      <button class="btn-secondary" onclick="resetForm()">Reset</button>
+    </div>
+
+  </div>
+
+  <!-- HISTORY -->
+  <div id="panel-history" class="panel">
+    <div id="history-content"></div>
+  </div>
+
+</div>
+
+<script>
+let autoSlug = true;
+let history = [];
+
+// ── BUTTON HELPERS ────────────────────────────
+function setField(btn, fieldId, value, btnClass) {
+  // Deactivate siblings
+  btn.closest(".btn-row").querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
+  btn.classList.add("active-sel");
+  document.getElementById(fieldId).value = value;
+  updatePreview();
+}
+
+function toggleField(btn, fieldId, value, btnClass) {
+  var field = document.getElementById(fieldId);
+  if (field.value === value) {
+    btn.classList.remove("active-sel");
+    field.value = "";
+  } else {
+    btn.closest(".btn-row").querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
+    btn.classList.add("active-sel");
+    field.value = value;
+  }
+  updatePreview();
+}
+
+// ── CORE UTM FUNCTIONS ────────────────────────
+function slugify(str) { return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, ""); }
+function fmt(v) { return autoSlug ? slugify(v) : v; }
+
+function getFields() {
+  return {
+    url:      document.getElementById("f-url").value.trim(),
+    source:   document.getElementById("f-source").value.trim(),
+    medium:   document.getElementById("f-medium").value.trim(),
+    campaign: document.getElementById("f-campaign").value.trim(),
+    content:  document.getElementById("f-content").value.trim(),
+    term:     document.getElementById("f-term").value.trim()
+  };
+}
+
+function buildURL() {
+  var f = getFields();
+  if (!f.url) return { url: "", full: "" };
+  var params = new URLSearchParams();
+  if (f.source)   params.set("utm_source",   fmt(f.source));
+  if (f.medium)   params.set("utm_medium",   fmt(f.medium));
+  if (f.campaign) params.set("utm_campaign", fmt(f.campaign));
+  if (f.content)  params.set("utm_content",  fmt(f.content));
+  if (f.term)     params.set("utm_term",     fmt(f.term));
+  var qs = params.toString();
+  var base = f.url.includes("?") ? f.url + "&" : f.url + "?";
+  return { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, content: f.content, term: f.term, full: qs ? base + qs : f.url };
+}
+
+function isValid() {
+  var f = getFields();
+  return !!(f.url && f.source && f.medium && f.campaign);
+}
+
+function updatePreview() {
+  var valid = isValid();
+  document.getElementById("copy-btn").disabled = !valid;
+  var built = buildURL();
+  var previewCard = document.getElementById("preview-card");
+  if (!built.url) { previewCard.style.display = "none"; return; }
+  previewCard.style.display = "block";
+  previewCard.className = "card" + (valid ? " valid" : "");
+  var label = document.getElementById("preview-label");
+  label.textContent = valid ? "Generated URL" : "Preview — complete required fields";
+  label.className = "preview-label " + (valid ? "valid" : "invalid");
+  var parts = built.full.split("?");
+  var html = '<span class="c-base">' + parts[0] + '</span>';
+  if (parts[1]) {
+    html += '<span class="c-sep">?</span>';
+    parts[1].split("&").forEach(function(part, i) {
+      var kv = part.split("=");
+      if (i > 0) html += '<span class="c-sep">&amp;</span>';
+      html += '<span class="c-key">' + kv[0] + '</span><span class="c-sep">=</span><span class="c-val">' + decodeURIComponent(kv[1] || "") + '</span>';
+    });
+  }
+  document.getElementById("url-preview").innerHTML = html;
+}
+
+function handleCopy() {
+  if (!isValid()) return;
+  var built = buildURL();
+  navigator.clipboard.writeText(built.full);
+  var btn = document.getElementById("copy-btn");
+  btn.textContent = "Copied!"; btn.classList.add("copied");
+  setTimeout(function() { btn.textContent = "Copy URL"; btn.classList.remove("copied"); }, 2000);
+
+  var entry = {
+    ts: new Date(),
+    url: built.url,
+    full: built.full,
+    source:   built.source,
+    medium:   built.medium,
+    campaign: built.campaign,
+    content:  built.content,
+    term:     built.term
+  };
+  history.unshift(entry);
+  updateHistoryTab();
+}
+
+function resetForm() {
+  ["f-url","f-source","f-medium","f-campaign","f-content","f-term"].forEach(function(id) { document.getElementById(id).value = ""; });
+  document.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
+  document.getElementById("preview-card").style.display = "none";
+  document.getElementById("copy-btn").disabled = true;
+}
+
+function toggleSlug() {
+  autoSlug = !autoSlug;
+  document.getElementById("toggle-slug").classList.toggle("on", autoSlug);
+  updatePreview();
+}
+
+// ── HISTORY TABLE ─────────────────────────────
+function formatTs(date) {
+  var d = new Date(date);
+  var mo = String(d.getMonth() + 1).padStart(2, "0");
+  var day = String(d.getDate()).padStart(2, "0");
+  var yr = d.getFullYear();
+  var hr = String(d.getHours()).padStart(2, "0");
+  var min = String(d.getMinutes()).padStart(2, "0");
+  return mo + "/" + day + "/" + yr + " " + hr + ":" + min;
+}
+
+function updateHistoryTab() {
+  document.getElementById("tab-history").textContent = history.length ? "History (" + history.length + ")" : "History";
+
+  var el = document.getElementById("history-content");
+
+  if (history.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128203;</div><div class="empty-text">No UTMs generated yet.</div></div>';
+    return;
+  }
+
+  var rows = history.map(function(item, i) {
+    var truncFull = item.full.length > 55 ? item.full.slice(0, 55) + "…" : item.full;
+    return '<tr>' +
+      '<td class="ts-cell">' + formatTs(item.ts) + '</td>' +
+      '<td class="param-cell">' + (item.campaign || '—') + '</td>' +
+      '<td class="param-cell">' + (item.medium || '—') + '</td>' +
+      '<td class="param-cell">' + (item.source || '—') + '</td>' +
+      '<td class="param-cell">' + (item.content || '—') + '</td>' +
+      '<td class="param-cell">' + (item.term || '—') + '</td>' +
+      '<td class="url-cell">' + truncFull + '</td>' +
+      '<td class="copy-cell"><button class="btn-copy-row" id="hcopy-' + i + '" onclick="copyRow(' + i + ')">Copy</button></td>' +
+      '</tr>';
+  }).join("");
+
+  el.innerHTML =
+    '<div class="history-toolbar">' +
+      '<span class="history-count">' + history.length + ' link' + (history.length !== 1 ? 's' : '') + ' this session</span>' +
+      '<button class="btn-ghost" onclick="clearHistory()">Clear all</button>' +
+    '</div>' +
+    '<div class="table-wrap">' +
+      '<table>' +
+        '<thead><tr>' +
+          '<th>Timestamp</th>' +
+          '<th>Campaign</th>' +
+          '<th>Medium</th>' +
+          '<th>Source</th>' +
+          '<th>Content</th>' +
+          '<th>Term</th>' +
+          '<th>URL</th>' +
+          '<th></th>' +
+        '</tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>' +
+    '</div>';
+}
+
+function copyRow(i) {
+  navigator.clipboard.writeText(history[i].full);
+  var btn = document.getElementById("hcopy-" + i);
+  btn.textContent = "Copied"; btn.classList.add("copied");
+  setTimeout(function() { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 1500);
+}
+
+function clearHistory() {
+  history = [];
+  updateHistoryTab();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll(".tab-btn").forEach(function(btn, i) { btn.classList.toggle("active", ["builder","history"][i] === tab); });
+  document.querySelectorAll(".panel").forEach(function(p) { p.classList.remove("active"); });
+  document.getElementById("panel-" + tab).classList.add("active");
+  if (tab === "history") updateHistoryTab();
+}
+
+updateHistoryTab();
+</script>
+</body>
+</html>
