@@ -80,24 +80,12 @@ const CLIENT_CONFIG = {
 
 const APPS_SCRIPT =
     "function doPost(e) {\n" +
-    "  var data = JSON.parse(e.postData.contents);\n" +
-    "  var action = data.action || \"log\";\n" +
-    "\n" +
-    "  if (action === \"getSerial\") {\n" +
-    "    return handleGetSerial(data.key);\n" +
-    "  }\n" +
-    "\n" +
-    "  return handleLog(data);\n" +
-    "}\n" +
-    "\n" +
-    "function handleLog(data) {\n" +
-    "  var ss = SpreadsheetApp.openById(\"YOUR_SHEET_ID\");\n" +
-    "  var sheet = ss.getActiveSheet();\n" +
-    "\n" +
+    "  const data = JSON.parse(e.postData.contents);\n" +
+    "  const ss = SpreadsheetApp.openById(\"YOUR_SHEET_ID\");\n" +
+    "  const sheet = ss.getActiveSheet();\n" +
     "  if (sheet.getLastRow() === 0) {\n" +
-    "    sheet.appendRow([\"Timestamp\",\"Client\",\"Email Name\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Full UTM\"]);\n" +
+    "    sheet.appendRow([\"Timestamp\", \"Client\", \"Email Name\", \"URL\", \"Source\", \"Medium\", \"Campaign\", \"Content\", \"Term\", \"Full UTM\"]);\n" +
     "  }\n" +
-    "\n" +
     "  sheet.appendRow([\n" +
     "    new Date().toISOString(),\n" +
     "    data.client || \"\",\n" +
@@ -110,10 +98,7 @@ const APPS_SCRIPT =
     "    data.term,\n" +
     "    data.fullUrl\n" +
     "  ]);\n" +
-    "\n" +
-    "  return ContentService\n" +
-    "    .createTextOutput(JSON.stringify({ success: true }))\n" +
-    "    .setMimeType(ContentService.MimeType.JSON);\n" +
+    "  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n" +
     "}\n" +
     "\n" +
     "function doGet(e) {\n" +
@@ -142,48 +127,6 @@ const APPS_SCRIPT =
     "    }\n" +
     "    return ContentService.createTextOutput(JSON.stringify({ success: true, serial: newCount })).setMimeType(ContentService.MimeType.JSON);\n" +
     "  }\n" +
-    "}" +
-    "function handleGetSerial(key) {\n" +
-    "  if (!key) {\n" +
-    "    return ContentService\n" +
-    "      .createTextOutput(JSON.stringify({ success: false, error: \"No key provided\" }))\n" +
-    "      .setMimeType(ContentService.MimeType.JSON);\n" +
-    "  }\n" +
-    "\n" +
-    "  var ss = SpreadsheetApp.openById(\"YOUR_SHEET_ID\");\n" +
-    "  \n" +
-    "  // Get or create the Counters tab\n" +
-    "  var countersSheet = ss.getSheetByName(\"Counters\");\n" +
-    "  if (!countersSheet) {\n" +
-    "    countersSheet = ss.insertSheet(\"Counters\");\n" +
-    "    countersSheet.appendRow([\"key\", \"count\"]);\n" +
-    "  }\n" +
-    "\n" +
-    "  // Find the row for this key\n" +
-    "  var data = countersSheet.getDataRange().getValues();\n" +
-    "  var rowIndex = -1;\n" +
-    "  for (var i = 1; i < data.length; i++) {\n" +
-    "    if (data[i][0] === key) {\n" +
-    "      rowIndex = i + 1; // Sheets rows are 1-indexed\n" +
-    "      break;\n" +
-    "    }\n" +
-    "  }\n" +
-    "\n" +
-    "  var newCount;\n" +
-    "\n" +
-    "  if (rowIndex === -1) {\n" +
-    "    // Key doesn't exist yet, create it\n" +
-    "    newCount = 1;\n" +
-    "    countersSheet.appendRow([key, newCount]);\n" +
-    "  } else {\n" +
-    "    // Increment existing\n" +
-    "    newCount = data[rowIndex - 1][1] + 1;\n" +
-    "    countersSheet.getRange(rowIndex, 2).setValue(newCount);\n" +
-    "  }\n" +
-    "\n" +
-    "  return ContentService\n" +
-    "    .createTextOutput(JSON.stringify({ success: true, serial: newCount }))\n" +
-    "    .setMimeType(ContentService.MimeType.JSON);\n" +
     "}";
 
 let autoSlug = true, autoLog = false, sheetsUrl = "", history = [];
@@ -371,27 +314,36 @@ function updateJobIdButton() {
     buildEmailName();
 }
 
-async function generateJobId() {
+function generateJobId() {
     if (!en.clientCode || !en.driver) return;
     var btn = document.getElementById("btn-generate-jobid");
     btn.textContent = "Generating...";
     btn.disabled = true;
     var key = en.clientCode + "_" + en.driver;
-    var driverShort = en.driver.slice(0,3).toLowerCase();
-    try {
-        var res = await fetch(sheetsUrl + "?action=getSerial&key=" + encodeURIComponent(key));
-        var json = await res.json();
+    var driverShort = en.driver.slice(0, 3).toLowerCase();
+    var callbackName = "jsonp_cb_" + Date.now();
+    var script = document.createElement("script");
+    window[callbackName] = function(json) {
+        delete window[callbackName];
+        document.body.removeChild(script);
         if (json.success) {
             en.jobId = en.clientCode + "-" + driverShort + "-" + json.serial;
             btn.textContent = "Regenerate Job ID";
+            btn.disabled = false;
+            updateJobIdButton();
         } else {
-            btn.textContent = "Error - Retry";
+            btn.textContent = "Error — Retry";
             btn.disabled = false;
         }
-    } catch(err) {
-            btn.textContent = "Error - Retry";
-            btn.disabled = false;
-        }
+    };
+    script.src = sheetsUrl + "?action=getSerial&key=" + encodeURIComponent(key) + "&callback=" + callbackName;
+    script.onerror = function() {
+        delete window[callbackName];
+        document.body.removeChild(script);
+        btn.textContent = "Error — Retry";
+        btn.disabled = false;
+    };
+    document.body.appendChild(script);
 }
 
 function buildEmailName() {
