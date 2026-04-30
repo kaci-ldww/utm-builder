@@ -78,12 +78,90 @@ const CLIENT_CONFIG = {
     }
 };
 
-const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"Client\",\"Email Name\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.client || \"\", data.emailName || \"\", data.url, data.source, data.medium, data.campaign, data.content, data.term, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
+const APPS_SCRIPT = "function doPost(e) {\n" +
+    "  var data = JSON.parse(e.postData.contents);\n" +
+    "  var action = data.action || \"log\";\n" +
+    "\n" +
+    "  if (action === \"getSerial\") {\n" +
+    "    return handleGetSerial(data.key);\n" +
+    "  }\n" +
+    "\n" +
+    "  return handleLog(data);\n" +
+    "}\n" +
+    "\n" +
+    "function handleLog(data) {\n" +
+    "  var ss = SpreadsheetApp.openById(\"YOUR_SHEET_ID\");\n" +
+    "  var sheet = ss.getActiveSheet();\n" +
+    "\n" +
+    "  if (sheet.getLastRow() === 0) {\n" +
+    "    sheet.appendRow([\"Timestamp\",\"Client\",\"Email Name\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Full UTM\"]);\n" +
+    "  }\n" +
+    "\n" +
+    "  sheet.appendRow([\n" +
+    "    new Date().toISOString(),\n" +
+    "    data.client || \"\",\n" +
+    "    data.emailName || \"\",\n" +
+    "    data.url,\n" +
+    "    data.source,\n" +
+    "    data.medium,\n" +
+    "    data.campaign,\n" +
+    "    data.content,\n" +
+    "    data.term,\n" +
+    "    data.fullUrl\n" +
+    "  ]);\n" +
+    "\n" +
+    "  return ContentService\n" +
+    "    .createTextOutput(JSON.stringify({ success: true }))\n" +
+    "    .setMimeType(ContentService.MimeType.JSON);\n" +
+    "}\n" +
+    "\n" +
+    "function handleGetSerial(key) {\n" +
+    "  if (!key) {\n" +
+    "    return ContentService\n" +
+    "      .createTextOutput(JSON.stringify({ success: false, error: \"No key provided\" }))\n" +
+    "      .setMimeType(ContentService.MimeType.JSON);\n" +
+    "  }\n" +
+    "\n" +
+    "  var ss = SpreadsheetApp.openById(\"YOUR_SHEET_ID\");\n" +
+    "  \n" +
+    "  // Get or create the Counters tab\n" +
+    "  var countersSheet = ss.getSheetByName(\"Counters\");\n" +
+    "  if (!countersSheet) {\n" +
+    "    countersSheet = ss.insertSheet(\"Counters\");\n" +
+    "    countersSheet.appendRow([\"key\", \"count\"]);\n" +
+    "  }\n" +
+    "\n" +
+    "  // Find the row for this key\n" +
+    "  var data = countersSheet.getDataRange().getValues();\n" +
+    "  var rowIndex = -1;\n" +
+    "  for (var i = 1; i < data.length; i++) {\n" +
+    "    if (data[i][0] === key) {\n" +
+    "      rowIndex = i + 1; // Sheets rows are 1-indexed\n" +
+    "      break;\n" +
+    "    }\n" +
+    "  }\n" +
+    "\n" +
+    "  var newCount;\n" +
+    "\n" +
+    "  if (rowIndex === -1) {\n" +
+    "    // Key doesn't exist yet, create it\n" +
+    "    newCount = 1;\n" +
+    "    countersSheet.appendRow([key, newCount]);\n" +
+    "  } else {\n" +
+    "    // Increment existing\n" +
+    "    newCount = data[rowIndex - 1][1] + 1;\n" +
+    "    countersSheet.getRange(rowIndex, 2).setValue(newCount);\n" +
+    "  }\n" +
+    "\n" +
+    "  return ContentService\n" +
+    "    .createTextOutput(JSON.stringify({ success: true, serial: newCount }))\n" +
+    "    .setMimeType(ContentService.MimeType.JSON);\n" +
+    "}";
 
 let autoSlug = true, autoLog = false, sheetsUrl = "", history = [];
 // Per-client artist cache: { ws: [...], rw: [...] }
 let artistCache = {};
-let en = { client: "", clientCode: "", driver: "", driverConfig: null, emailType: "", content: "", desc: "", type2: "", month: "" };
+let en = { client: "", clientCode: "", driver: "", driverConfig: null, emailType: "", content: "", desc: "", type2: "", month: "", jobId: ""};
 
 document.getElementById("apps-script-code").textContent = APPS_SCRIPT;
 
@@ -129,6 +207,8 @@ CLIENTS.forEach(function(c) {
         en.clientCode = c.code;
         en.driver = ""; en.driverConfig = null;
         en.emailType = ""; en.content = ""; en.desc = ""; en.type2 = "";
+        en.jobId = "";
+        updateJobIdButton();
         // Pre-fetch artist list for this client if it has one
         loadArtistsForClient(c.code);
         renderDriverBtns(c.code);
@@ -154,6 +234,8 @@ function renderDriverBtns(clientCode) {
             setActive("driver-btns", btn);
             en.driver = d.code; en.driverConfig = d;
             en.content = ""; en.desc = ""; en.type2 = "";
+            en.job = "";
+            updateJobIdButton();
             renderEnContentBtns(d);
             renderEnDescBtns(d);
             renderType2Btns(d);
@@ -252,6 +334,42 @@ function renderType2Btns(d) {
     });
 }
 
+function updateJobIdButton() {
+    var btn = document.getElementById("btn-generate-jobid");
+    var useBtn = document.getElementById("en-use-btn");
+    if (!btn) return;
+    btn.disabled = !(en.clientCode && en.driver);
+    useBtn.disabled = !en.jobId;
+    buildEmailName();
+}
+
+async function generateJobId() {
+    if (!en.clientCode || !en.driver) return;
+    var btn = document.getElementById("btn-generate-jobid");
+    btn.textContent = "Generating...";
+    btn.disabled = true;
+    var key = en.clientCode + "_" + en.driver;
+    var driverShort = en.driver.slice(0,3).toLowerCase();
+    try {
+        var res = await fetch(sheetsUrl, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({action: "getSerial", key: key})
+        });
+        var json = await res.json();
+        if (json.success) {
+            en.jobId = en.clientCode + "-" + driverShort + "-" + json.serial;
+            btn.textContent = "Regenerate Job ID";
+        } else {
+            btn.textContent = "Error - Retry";
+            btn.disabled = false;
+        }
+    } catch(err) {
+            btn.textContent = "Error - Retry";
+            btn.disabled = false;
+        }
+}
+
 function buildEmailName() {
     en.month = document.getElementById("en-month").value;
     var prefix = en.clientCode || "";
@@ -260,6 +378,7 @@ function buildEmailName() {
     parts.push(en.month);
     var filtered = parts.filter(function(p) { return p && p.trim() !== ""; });
     var name = filtered.join("_");
+    if (en.jobId) name = name + "_" + en.jobId;
     var preview = document.getElementById("en-preview");
     var copyBtn = document.getElementById("en-copy-btn");
     var useBtn = document.getElementById("en-use-btn");
@@ -289,10 +408,17 @@ function useEmailName() {
     if (d) document.getElementById("f-campaign").value = d.utmCampaign || en.driver;
     if (en.emailType) document.getElementById("f-source").value = en.emailType;
     if (en.content)   document.getElementById("f-content").value = en.content;
-    var termParts = [en.desc, en.type2].filter(function(p) { return p && p.trim() !== ""; });
-    document.getElementById("f-term").value = termParts.join("_");
-    updatePreview();
-    document.getElementById("f-url").scrollIntoView({ behavior: "smooth", block: "center" });
+    var termVal = document.getElementById("f-term").value.trim();
+    var contentVal = document.getElementById("f-content").value.trim();
+
+    if (termVal) {
+        document.getElementById("f-term").value = termVal + "_" + en.jobId;
+    } else if (contentVal) {
+        document.getElementById("f-content").value = contentVal + "_" + en.jobId;
+    } else {
+        var campaignVal = document.getElementById("f-campaign").value.trim();
+        document.getElementById("f-campaign").value = campaignVal + "_" + en.jobId;
+    }
 }
 
 function slugify(str) { return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, ""); }
@@ -385,6 +511,9 @@ async function logToSheets(entry) {
 }
 
 function resetForm() {
+    en.jobId = "";
+    var jobBtn = document.getElementById("btn-generate-jobid");
+    if (jobBtn) { jobBtn.textContent = "Generate Job ID"; jobBtn.disabled = true; }
     en = { client: "", clientCode: "", driver: "", driverConfig: null, emailType: "", content: "", desc: "", type2: "", month: "" };
     document.querySelectorAll(".preset-btn").forEach(function(b) { b.classList.remove("active-sel"); });
     document.getElementById("driver-btns").innerHTML = '<span class="empty-hint">Select a client first</span>';
