@@ -78,7 +78,8 @@ const CLIENT_CONFIG = {
     }
 };
 
-const APPS_SCRIPT = "function doPost(e) {\n" +
+const APPS_SCRIPT =
+    "function doPost(e) {\n" +
     "  var data = JSON.parse(e.postData.contents);\n" +
     "  var action = data.action || \"log\";\n" +
     "\n" +
@@ -115,6 +116,33 @@ const APPS_SCRIPT = "function doPost(e) {\n" +
     "    .setMimeType(ContentService.MimeType.JSON);\n" +
     "}\n" +
     "\n" +
+    "function doGet(e) {\n" +
+    "  if (e.parameter.action === \"getSerial\") {\n" +
+    "    const ss = SpreadsheetApp.openById(\"YOUR_SHEET_ID\");\n" +
+    "    let countersSheet = ss.getSheetByName(\"Counters\");\n" +
+    "    if (!countersSheet) {\n" +
+    "      countersSheet = ss.insertSheet(\"Counters\");\n" +
+    "      countersSheet.appendRow([\"key\", \"count\"]);\n" +
+    "    }\n" +
+    "    const rows = countersSheet.getDataRange().getValues();\n" +
+    "    let rowIndex = -1;\n" +
+    "    for (let i = 1; i < rows.length; i++) {\n" +
+    "      if (rows[i][0] === e.parameter.key) {\n" +
+    "        rowIndex = i + 1;\n" +
+    "        break;\n" +
+    "      }\n" +
+    "    }\n" +
+    "    let newCount;\n" +
+    "    if (rowIndex === -1) {\n" +
+    "      newCount = 1;\n" +
+    "      countersSheet.appendRow([e.parameter.key, newCount]);\n" +
+    "    } else {\n" +
+    "      newCount = rows[rowIndex - 1][1] + 1;\n" +
+    "      countersSheet.getRange(rowIndex, 2).setValue(newCount);\n" +
+    "    }\n" +
+    "    return ContentService.createTextOutput(JSON.stringify({ success: true, serial: newCount })).setMimeType(ContentService.MimeType.JSON);\n" +
+    "  }\n" +
+    "}" +
     "function handleGetSerial(key) {\n" +
     "  if (!key) {\n" +
     "    return ContentService\n" +
@@ -351,11 +379,7 @@ async function generateJobId() {
     var key = en.clientCode + "_" + en.driver;
     var driverShort = en.driver.slice(0,3).toLowerCase();
     try {
-        var res = await fetch(sheetsUrl, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({action: "getSerial", key: key})
-        });
+        var res = await fetch(sheetsUrl + "?action=getSerial&key=" + encodeURIComponent(key));
         var json = await res.json();
         if (json.success) {
             en.jobId = en.clientCode + "-" + driverShort + "-" + json.serial;
