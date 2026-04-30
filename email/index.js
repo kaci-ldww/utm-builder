@@ -381,20 +381,25 @@ function useEmailName() {
     var preview = document.getElementById("en-preview");
     if (!preview || preview.classList.contains("empty")) return;
     var d = en.driverConfig;
-    if (d) document.getElementById("f-campaign").value = d.utmCampaign || en.driver;
-    if (en.emailType) document.getElementById("f-source").value = en.emailType;
-    if (en.content)   document.getElementById("f-content").value = en.content;
+
+    // Read existing values BEFORE setting anything
     var termVal = document.getElementById("f-term").value.trim();
     var contentVal = document.getElementById("f-content").value.trim();
+
+    if (d) document.getElementById("f-campaign").value = d.utmCampaign || en.driver;
+    if (en.emailType) document.getElementById("f-source").value = en.emailType;
+    if (en.content) document.getElementById("f-content").value = en.content;
 
     if (termVal) {
         document.getElementById("f-term").value = termVal + "_" + en.jobId;
     } else if (contentVal) {
-        document.getElementById("f-content").value = contentVal + "_" + en.jobId;
+        document.getElementById("f-content").value = document.getElementById("f-content").value + "_" + en.jobId;
     } else {
         var campaignVal = document.getElementById("f-campaign").value.trim();
         document.getElementById("f-campaign").value = campaignVal + "_" + en.jobId;
     }
+
+    updatePreview();
 }
 
 function slugify(str) { return str.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-_]/g, ""); }
