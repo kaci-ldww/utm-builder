@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UTM Builder — Email</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+    <div class="header">
+        <div class="header-row">
+            <div class="logo">&#9889;</div>
+            <h1>UTM Builder — Email</h1>
+        </div>
+        <p class="subtitle">Build your email name, then generate your tracking link.</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('builder')">Builder</button>
+        <button class="tab-btn" id="tab-history" onclick="switchTab('history')">History</button>
+        <button class="tab-btn" id="tab-sheets" onclick="switchTab('sheets')">Sheets</button>
+    </div>
+
+    <div id="panel-builder" class="panel active">
+        <div class="card">
+            <div class="card-title">&#9993; Email Name Builder</div>
+            <div class="card-sub">Select a client, then fill in the options to generate your email name.</div>
+
+            <div class="section">
+                <div class="section-label">Client <span>required</span></div>
+                <div class="btn-row" id="client-btns"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Business Driver <span>required</span></div>
+                <div class="btn-row" id="driver-btns"><span class="empty-hint">Select a client first</span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Email Type <span>required</span></div>
+                <div class="btn-row" id="emailtype-btns"><span class="empty-hint">Select a client first</span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Content <span>based on business driver</span></div>
+                <div class="btn-row" id="en-content-btns"><span class="empty-hint">Select a business driver first</span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Description <span>based on business driver</span></div>
+                <div class="btn-row" id="en-desc-btns"><span class="empty-hint">Select a business driver first</span></div>
+            </div>
+
+            <div class="section" id="type2-section" style="display:none">
+                <div class="section-label">Email Type 2 <span>optional</span></div>
+                <div class="btn-row" id="type2-btns"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Date <span>MMDDYYYY</span></div>
+                <input type="text" id="en-month" placeholder="MMDDYYYY" maxlength="8" oninput="buildEmailName()" style="max-width:160px;" />
+            </div>
+
+            <div class="name-preview-wrap">
+                <div class="name-preview-label">Generated Email Name</div>
+                <div class="name-preview empty" id="en-preview">Fill in the fields above to generate your email name</div>
+                <div class="name-actions">
+                    <button class="btn-copy-name" id="en-copy-btn" onclick="copyEmailName()" disabled>Copy Name</button>
+                    <button class="btn-use-name" id="en-use-btn" onclick="useEmailName()" disabled>&#8595; Use in UTM Form</button>
+                    <button class="btn-use-name" id="btn-generate-jobid" onclick="generateJobId()" disabled>Generate Job ID</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="utm-section-header">
+                <span class="utm-badge">UTM</span>
+                <span style="font-size:13px;font-weight:700;color:#f1f5f9;">Link Builder</span>
+            </div>
+            <div class="field">
+                <label>Destination URL *</label>
+                <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
+            </div>
+            <div class="grid-2">
+                <div class="field">
+                    <label>Source *</label>
+                    <input type="text" id="f-source" placeholder="auto-filled from email name" oninput="updatePreview()" />
+                </div>
+                <div class="field">
+                    <label>Medium *</label>
+                    <input type="text" id="f-medium" value="email" oninput="updatePreview()" />
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="field">
+                    <label>Campaign *</label>
+                    <input type="text" id="f-campaign" placeholder="auto-filled from email name" oninput="updatePreview()" />
+                </div>
+                <div class="field">
+                    <label>Content <span style="font-size:10px;color:#6366f1;font-weight:400;text-transform:none;letter-spacing:0;">auto-filled</span></label>
+                    <input type="text" id="f-content" placeholder="auto-filled from email name" oninput="updatePreview()" />
+                </div>
+            </div>
+            <div class="field">
+                <label>Term <span style="font-size:10px;color:#6366f1;font-weight:400;text-transform:none;letter-spacing:0;">auto-filled from description + email type 2</span></label>
+                <input type="text" id="f-term" placeholder="auto-filled from email name" oninput="updatePreview()" />
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:6px;margin-bottom:16px;">
+                <div class="toggle-row">
+                    <div class="toggle on" id="toggle-slug" onclick="toggleSlug()"><div class="toggle-knob"></div></div>
+                    <span class="toggle-label">Auto-format (lowercase + hyphens)</span>
+                </div>
+                <div class="toggle-row" id="autolog-row" style="display:none">
+                    <div class="toggle" id="toggle-autolog" onclick="toggleAutoLog()"><div class="toggle-knob"></div></div>
+                    <span class="toggle-label">Auto-log to Sheets on copy</span>
+                </div>
+            </div>
+            <div class="card" id="preview-card" style="display:none;margin-bottom:16px;">
+                <div class="preview-label" id="preview-label"></div>
+                <div class="url-preview" id="url-preview"></div>
+            </div>
+            <div class="actions">
+                <button class="btn-primary" id="copy-btn" onclick="handleCopy()" disabled>Copy URL</button>
+                <span class="log-status" id="log-status" style="display:none"></span>
+                <button class="btn-secondary" onclick="resetForm()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="panel-history" class="panel">
+        <div id="history-list"></div>
+    </div>
+
+    <div id="panel-sheets" class="panel">
+        <div class="card">
+            <div style="font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:4px;">Connect Google Sheets</div>
+            <div style="font-size:13px;color:#64748b;margin-bottom:16px;line-height:1.6;">Log every UTM automatically to a Google Sheet. Takes ~3 minutes to set up.</div>
+            <div class="step-row"><div class="step-num">1</div><div class="step-text">Create a new Google Sheet.</div></div>
+            <div class="step-row"><div class="step-num">2</div><div class="step-text">Go to <strong>Extensions &rarr; Apps Script</strong>. Paste the code below and save.</div></div>
+            <div class="step-row"><div class="step-num">3</div><div class="step-text">Click <strong>Deploy &rarr; New deployment &rarr; Web app</strong>. Set "Execute as: Me" and "Who has access: Anyone". Deploy and authorize.</div></div>
+            <div class="step-row"><div class="step-num">4</div><div class="step-text">Copy the <strong>Web App URL</strong> and paste it below.</div></div>
+        </div>
+        <div class="card">
+            <div style="font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;">Apps Script Code</div>
+            <div class="code-block-wrap">
+                <pre id="apps-script-code"></pre>
+                <button class="copy-code-btn" id="copy-script-btn" onclick="copyScript()">Copy</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="field">
+                <label>Your Web App URL</label>
+                <input type="url" id="sheets-url-input" class="sans" placeholder="https://script.google.com/macros/s/.../exec" oninput="updateSaveBtn()" />
+            </div>
+            <button class="btn-full" id="save-sheets-btn" onclick="saveSheets()" disabled>Save &amp; Connect</button>
+            <div class="sheets-connected" id="sheets-connected" style="display:none">&#10003; Connected</div>
+        </div>
+    </div>
+</div>
+<script src="index.js"></script>
+</body>
+</html>
