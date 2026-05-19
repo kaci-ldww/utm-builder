@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WinStar Organic Social UTM Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+    <div class="header">
+        <div class="header-row">
+            <div class="logo">&#9889;</div>
+            <h1>WinStar Organic Social UTM Builder</h1>
+        </div>
+        <p class="subtitle">Generate, log, and manage organic social tracking links for WinStar.</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('builder')">Builder</button>
+        <button class="tab-btn" id="tab-history" onclick="switchTab('history')">History</button>
+        <button class="tab-btn" id="tab-sheets" onclick="switchTab('sheets')">Sheets</button>
+    </div>
+
+    <div id="panel-builder" class="panel active">
+
+        <div class="card">
+            <div class="field" style="margin-bottom:0">
+                <label>Destination URL *</label>
+                <input type="url" id="f-url" placeholder="https://yoursite.com/page" oninput="updatePreview()" />
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section">
+                <div class="section-label">Campaign <span>select one</span></div>
+                <div class="btn-row" id="campaign-btns"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Post Type <span>fills source</span></div>
+                <div class="btn-row" id="source-btns"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Content <span>based on campaign</span></div>
+                <div class="btn-row" id="content-btns"><span class="empty-hint">Select a campaign first</span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-label">Term <span>based on campaign</span></div>
+                <div class="btn-row" id="term-btns"><span class="empty-hint">Select a campaign first</span></div>
+            </div>
+
+            <div class="section" id="other-section" style="margin-bottom:0">
+                <div class="section-label">Other Identifiers <span id="other-hint">based on campaign</span></div>
+                <div class="btn-row" id="other-btns"><span class="empty-hint">Select a campaign first</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="grid-2">
+                <div class="field">
+                    <label>Medium *</label>
+                    <input type="text" id="f-medium" value="social" oninput="updatePreview()" />
+                    <div class="hint">Pre-filled as social</div>
+                </div>
+                <div class="field">
+                    <label>Source *</label>
+                    <input type="text" id="f-source" placeholder="select Post Type above" oninput="updatePreview()" />
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="field">
+                    <label>Campaign *</label>
+                    <input type="text" id="f-campaign" placeholder="select Campaign above" oninput="updateCampaignDynamic(); updatePreview()" />
+                </div>
+                <div class="field">
+                    <label>Content</label>
+                    <input type="text" id="f-content" placeholder="select or type" oninput="updatePreview()" />
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="field" style="margin-bottom:0">
+                    <label>Term</label>
+                    <input type="text" id="f-term" placeholder="select or type" oninput="updatePreview()" />
+                </div>
+                <div class="field" style="margin-bottom:0">
+                    <label>Other Identifier</label>
+                    <input type="text" id="f-other" placeholder="select or type" oninput="updatePreview()" />
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+            <div class="toggle-row">
+                <div class="toggle on" id="toggle-slug" onclick="toggleSlug()"><div class="toggle-knob"></div></div>
+                <span class="toggle-label">Auto-format (lowercase + hyphens)</span>
+            </div>
+            <div class="toggle-row" id="autolog-row" style="display:none">
+                <div class="toggle" id="toggle-autolog" onclick="toggleAutoLog()"><div class="toggle-knob"></div></div>
+                <span class="toggle-label">Auto-log to Sheets on copy</span>
+            </div>
+        </div>
+
+        <div class="card" id="preview-card" style="display:none">
+            <div class="preview-label" id="preview-label"></div>
+            <div class="url-preview" id="url-preview"></div>
+        </div>
+        <div class="card" id="short-url-card" style="display:none">
+            <div class="preview-label valid">Shortened URL</div>
+            <div class="url-preview" id="short-url-display"></div>
+            <button class="btn-primary" style="margin-top:10px;width:100%" id="copy-short-btn" onclick="copyShortUrl()">Copy Short URL</button>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" id="copy-btn" onclick="handleCopy()" disabled>Copy URL</button>
+            <button class="btn-primary" id="shorten-btn" onclick="handleShorten()" disabled>Shorten</button>
+            <span class="log-status" id="log-status" style="display:none"></span>
+            <button class="btn-secondary" onclick="resetForm()">Reset</button>
+        </div>
+
+
+    </div>
+
+    <div id="panel-history" class="panel">
+        <div id="history-list"></div>
+    </div>
+
+    <div id="panel-sheets" class="panel">
+        <div class="card">
+            <div style="font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:4px;">Connect Google Sheets</div>
+            <div style="font-size:13px;color:#64748b;margin-bottom:16px;line-height:1.6;">Log every UTM automatically to a Google Sheet. Takes ~3 minutes to set up.</div>
+            <div class="step-row"><div class="step-num">1</div><div class="step-text">Create a new Google Sheet.</div></div>
+            <div class="step-row"><div class="step-num">2</div><div class="step-text">Go to <strong>Extensions &rarr; Apps Script</strong>. Paste the code below and save.</div></div>
+            <div class="step-row"><div class="step-num">3</div><div class="step-text">Click <strong>Deploy &rarr; New deployment &rarr; Web app</strong>. Set "Execute as: Me" and "Who has access: Anyone". Deploy and authorize.</div></div>
+            <div class="step-row"><div class="step-num">4</div><div class="step-text">Copy the <strong>Web App URL</strong> and paste it below.</div></div>
+        </div>
+        <div class="card">
+            <div style="font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;">Apps Script Code</div>
+            <div class="code-block-wrap">
+                <pre id="apps-script-code"></pre>
+                <button class="copy-code-btn" id="copy-script-btn" onclick="copyScript()">Copy</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="field">
+                <label>Your Web App URL</label>
+                <input type="url" id="sheets-url-input" class="sans" placeholder="https://script.google.com/macros/s/.../exec" oninput="updateSaveBtn()" />
+            </div>
+            <button class="btn-full" id="save-sheets-btn" onclick="saveSheets()" disabled>Save &amp; Connect</button>
+            <div class="sheets-connected" id="sheets-connected" style="display:none">&#10003; Connected</div>
+        </div>
+    </div>
+</div>
+<script src="index.js"></script>
+</body>
+</html>
