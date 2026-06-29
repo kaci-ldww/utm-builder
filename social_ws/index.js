@@ -16,7 +16,7 @@ const CAMPAIGN_PRESETS = [
 
 const CONTENT_BY_CAMPAIGN = {
     entertainment:  ["general","announce","onsale","reminder","onsalereminder","presale","upsell","reschedule","reply","postshow","package","cancellation","passporttosummer"],
-    brandawareness: ["explorewinstar","general","gozone","wsapp","winstarwinners","passporttosummer","TCUoffer"],
+    brandawareness: ["explorewinstar","general","gozone","wsapp","winstarwinners","passporttosummer","TCUoffer",],
     gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","10kgames","rmg","offer","passporttosummer","clubpassport","influencer"],
     golf:           ["general","academy","courses","membership","proshop","golftournaments","clubhouse","signup","partnership","retail","passporttosummer"],
     hotel:          ["gaming","shuttle","reply","dining","wsapp","offer","passporttosummer"],
@@ -26,7 +26,7 @@ const CONTENT_BY_CAMPAIGN = {
 
 const TERM_BY_CAMPAIGN = {
     entertainment:  ["video","reels","photo","carousel","link","stay","dining","still","motion","comment","dm"],
-    brandawareness: ["permissionpass","giveaway","stadium"],
+    brandawareness: ["permissionpass","giveaway","stadium","influencer_shl"],
     gaming:         ["poker","craps","palladium","comment","dm","mywinstar","spaoffer","invite","announcement","reminder","gamefinder","promotions","signup","benefits","ladyluck"],
     golf:           ["teetime","instructors","giveaway","comment","dm"],
     hotel:          ["checkin","gamefinder","comment","dm"],
