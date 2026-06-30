@@ -39,7 +39,7 @@ const CLIENT_CONFIG = {
                 desc: ["reengagement1","reengagement2","reengagement3"], type2: ["header","footer"] },
             { label: "Entertainment",   code: "ent",            utmCampaign: "entertainment",
                 content: ["presale","onsale","ticketpush","knowbeforeyougo","postshow","bogo","rescheduled","canceled","giveaway"],
-                desc: "artist_dropdown", type2: ["header","footer","vip","encore"] },
+                desc: "artist_dropdown", type2: ["header","footer","vip","encore","bs"] },
             { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
                 content: ["promotion","wildcard","rwaccount"],
                 desc: ["membership","awareness","promo"], type2: ["newmember","uncarded","carded","header","footer"] },
