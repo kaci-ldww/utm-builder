@@ -25,12 +25,12 @@ const CONTENT_BY_CAMPAIGN = {
 };
 
 const TERM_BY_CAMPAIGN = {
-    entertainment:  ["video","reels","photo","carousel","link","stay","dining","still","motion","comment","dm"],
-    brandawareness: ["permissionpass","giveaway","stadium","influencer_shl"],
-    gaming:         ["poker","craps","palladium","comment","dm","mywinstar","spaoffer","invite","announcement","reminder","gamefinder","promotions","signup","benefits","ladyluck"],
-    golf:           ["teetime","instructors","giveaway","comment","dm"],
-    hotel:          ["checkin","gamefinder","comment","dm"],
-    amenities:      ["granvia","dcbg","lafleur","laparis","vino","ihop","chipsnales","bachelor","bachelorette","weddings","cascades","spaoffer","newmember","winstarwallet"]
+    entertainment:  ["video","reels","photo","carousel","link","stay","dining","still","motion","comment","dm","proactive"],
+    brandawareness: ["permissionpass","giveaway","stadium","influencer_shl","comment","dm","proactive"],
+    gaming:         ["poker","craps","palladium","comment","dm","mywinstar","spaoffer","invite","announcement","reminder","gamefinder","promotions","signup","benefits","ladyluck","comment","dm","proactive"],
+    golf:           ["teetime","instructors","giveaway","comment","dm","proactive"],
+    hotel:          ["checkin","gamefinder","comment","dm","proactive"],
+    amenities:      ["granvia","dcbg","lafleur","laparis","vino","ihop","chipsnales","bachelor","bachelorette","weddings","cascades","spaoffer","newmember","winstarwallet","comment","dm","proactive"]
 };
 
 const OTHER_IDENTIFIERS = ["video","reels","photo","carousel","link","still","motion","a"];
