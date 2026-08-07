@@ -263,7 +263,7 @@ const CAMPAIGN_PRESETS = [
 const CONTENT_BY_CAMPAIGN = {
   entertainment:  ["general","announce","onsale","reminder","onsalereminder","presale","upsell","reschedule","reply","postshow","package","cancellation","reminder","encorepass", "giveaway"],
   brandawareness: ["general","rwapp"],
-  gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","wildcard","offer","gamefinder"],
+  gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","wildcard","offer","gamefinder","influencer"],
   playerscard:    ["general","levelup","rwapp","newmember"],
   hiring:         ["general"],
   amenities:      ["hotel","dining","shopping"]
@@ -272,13 +272,13 @@ const CONTENT_BY_CAMPAIGN = {
 const TERM_BY_CAMPAIGN = {
   entertainment:  ["video","reels","photo","carousel","link","stay","dining","still","motion","comment","dm","proactive"],
   brandawareness: ["thunder","ou","blooddrive","comment","dm","proactive"],
-  gaming:         ["poker","craps","palladium","comment","dm","proactive"],
+  gaming:         ["poker","craps","palladium","comment","dm","proactive","shl"],
   playerscard:    ["thunder","signup","promotion","comment","dm","proactive"],
   hiring:         ["comment","dm","proactive"],
   amenities:      ["giftshop","buffet","cantinaandtacos","weekprior","daybefore", "chipsnales","comment","dm","proactive"]
 };
 
-const OTHER_IDENTIFIERS = ["video","reels","photo","carousel","link","still","motion"];
+const OTHER_IDENTIFIERS = ["video","reels","photo","carousel","link","still","motion","a"];
 // ─────────────────────────────────────────────
 
 const APPS_SCRIPT = "function doPost(e) {\n  const sheet = SpreadsheetApp.openById(\"YOUR_SHEET_ID\").getActiveSheet();\n  const data = JSON.parse(e.postData.contents);\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow([\"Timestamp\",\"URL\",\"Source\",\"Medium\",\"Campaign\",\"Content\",\"Term\",\"Other\",\"Full UTM\"]);\n  }\n  sheet.appendRow([new Date().toISOString(), data.url, data.source, data.medium, data.campaign, data.content, data.term, data.other, data.fullUrl]);\n  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);\n}";
