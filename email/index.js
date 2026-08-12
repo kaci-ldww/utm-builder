@@ -3,6 +3,8 @@ const CLIENTS = [
     { label: "Riverwind",      code: "rw"    },
     { label: "Newcastle",      code: "nc"    },
     { label: "Goldsby Gaming", code: "ggc"   },
+    { label: "Riverstar",      code: "rs"    },
+    { label: "Lakecrest",      code: "lc"    },
     { label: "Quvia",          code: "quvia" }
 ];
 
@@ -49,6 +51,26 @@ const CLIENT_CONFIG = {
         ]
     },
     nc: {
+        drivers: [
+            { label: "Brand Awareness", code: "brandawareness", utmCampaign: "brandawareness",
+                content: ["reengagement","gozone","welcome","giveaway"],
+                desc: ["reengagement1","reengagement2","reengagement3"], type2: ["header","footer"] },
+            { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
+                content: ["promotion","reelrewards","ncaccount"],
+                desc: ["membership","awareness","promo"], type2: ["vip","newmember","uncarded","carded","header","footer"] }
+        ]
+    },
+    rs: {
+        drivers: [
+            { label: "Brand Awareness", code: "brandawareness", utmCampaign: "brandawareness",
+                content: ["reengagement","gozone","welcome","giveaway"],
+                desc: ["reengagement1","reengagement2","reengagement3"], type2: ["header","footer"] },
+            { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
+                content: ["promotion","reelrewards","ncaccount"],
+                desc: ["membership","awareness","promo"], type2: ["vip","newmember","uncarded","carded","header","footer"] }
+        ]
+    },
+    lc: {
         drivers: [
             { label: "Brand Awareness", code: "brandawareness", utmCampaign: "brandawareness",
                 content: ["reengagement","gozone","welcome","giveaway"],
