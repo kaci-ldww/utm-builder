@@ -22,7 +22,7 @@ const CLIENT_CONFIG = {
                 desc: "artist_dropdown", type2: [] },
             { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
                 content: ["promotion","mywinstar","clubpassport","influencer"],
-                desc: ["membership","awareness","ladyluck"], type2: ["newmember","uncarded","carded"] },
+                desc: ["membership","awareness","ladyluck"], type2: ["newmember","uncarded","carded","prospect"] },
             { label: "Brand Awareness", code: "brandawareness", utmCampaign: "brandawareness",
                 content: ["reengagement","gozone","welcome","giveaway"],
                 desc: ["reengagement1","reengagement2","reengagement3"], type2: [] },
