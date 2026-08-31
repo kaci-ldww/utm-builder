@@ -44,7 +44,7 @@ const CLIENT_CONFIG = {
                 desc: "artist_dropdown", type2: ["header","footer","vip","encore","bs"] },
             { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
                 content: ["promotion","wildcard","rwaccount"],
-                desc: ["membership","awareness","promo"], type2: ["newmember","uncarded","carded","header","footer"] },
+                desc: ["membership","awareness","promo"], type2: ["newmember","uncarded","carded","header","footer","prospect"] },
             { label: "Amenities",       code: "amenities",      utmCampaign: "amenities",
                 content: ["hotel"],
                 desc: ["prestay1","prestay2","giveaway"], type2: [], type2freetext: true }
@@ -57,7 +57,7 @@ const CLIENT_CONFIG = {
                 desc: ["reengagement1","reengagement2","reengagement3"], type2: ["header","footer"] },
             { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
                 content: ["promotion","reelrewards","ncaccount"],
-                desc: ["membership","awareness","promo"], type2: ["vip","newmember","uncarded","carded","header","footer"] }
+                desc: ["membership","awareness","promo"], type2: ["vip","newmember","uncarded","carded","header","footer","prospect"] }
         ]
     },
     rs: {
