@@ -19,19 +19,19 @@ const CLIENT_CONFIG = {
         drivers: [
             { label: "Entertainment",   code: "ent",            utmCampaign: "entertainment",
                 content: ["presale","onsale","ticketpush_genre","ticketpush_hotel","ttgt","postshow","bogo","rescheduled","canceled","giveaway","winstarwinners"],
-                desc: "artist_dropdown", type2: [] },
+                desc: ["artist_dropdown","nuture"] type2:[ "touch2","touch3","touch4","touch5","touch6a","touch6b","touch7" ]},
             { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
                 content: ["promotion","mywinstar","clubpassport","influencer","winstarwinners"],
-                desc: ["membership","awareness","ladyluck"], type2: ["newmember","uncarded","carded","prospect"] },
+                desc: ["membership","awareness","ladyluck","nuture"], type2: ["newmember","uncarded","carded","prospect","touch2","touch3","touch4","touch5","touch6a","touch6b","touch7"] },
             { label: "Brand Awareness", code: "brandawareness", utmCampaign: "brandawareness",
                 content: ["reengagement","gozone","welcome","giveaway","winstarwinners"],
-                desc: ["reengagement1","reengagement2","reengagement3"], type2: [] },
+                desc: ["reengagement1","reengagement2","reengagement3","nuture"], type2: ["touch2","touch3","touch4","touch5","touch6a","touch6b","touch7"] },
             { label: "Amenities",       code: "amenities",      utmCampaign: "hotel",
                 content: ["hotel","spa","pool","dining","meet","winstarwinners"],
-                desc: ["retailpackage","conventions","weddings","catering","prestay1","prestay2"], type2: ["couples"] },
+                desc: ["retailpackage","conventions","weddings","catering","prestay1","prestay2","nuture"], type2: ["couples","touch2","touch3","touch4","touch5","touch6a","touch6b","touch7"] },
             { label: "Golf",            code: "golf",           utmCampaign: "golf",
                 content: ["instruction","retailpackage","membership","tournaments","winstarwinners"],
-                desc: ["email1","email2","email3"], type2: [] }
+                desc: ["email1","email2","email3","nuture"], type2: ["touch2","touch3","touch4","touch5","touch6a","touch6b","touch7"] }
         ]
     },
     rw: {
