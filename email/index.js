@@ -19,7 +19,7 @@ const CLIENT_CONFIG = {
         drivers: [
             { label: "Entertainment",   code: "ent",            utmCampaign: "entertainment",
                 content: ["presale","onsale","ticketpush_genre","ticketpush_hotel","ttgt","postshow","bogo","rescheduled","canceled","giveaway","winstarwinners"],
-                desc: "artist_dropdown",["nuture"] type2:[ "touch2","touch3","touch4","touch5","touch6a","touch6b","touch7" ]},
+                desc: "artist_dropdown",["nuture"], type2:[ "touch2","touch3","touch4","touch5","touch6a","touch6b","touch7" ]},
             { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
                 content: ["promotion","mywinstar","clubpassport","influencer","winstarwinners"],
                 desc: ["membership","awareness","ladyluck","nuture"], type2: ["newmember","uncarded","carded","prospect","touch2","touch3","touch4","touch5","touch6a","touch6b","touch7"] },
