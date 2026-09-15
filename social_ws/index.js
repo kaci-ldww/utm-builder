@@ -26,7 +26,7 @@ const CONTENT_BY_CAMPAIGN = {
 
 const TERM_BY_CAMPAIGN = {
     entertainment:  ["video","reels","photo","carousel","link","stay","dining","still","motion","comment","dm","proactive"],
-    brandawareness: ["permissionpass","giveaway","stadium","influencer_shl","comment","dm","proactive"],
+    brandawareness: ["permissionpass","giveaway","stadium","influencer_shl","comment","dm","proactive","influencer_ll"],
     gaming:         ["poker","craps","palladium","comment","dm","mywinstar","spaoffer","invite","announcement","reminder","gamefinder","promotions","signup","benefits","ladyluck","comment","dm","proactive"],
     golf:           ["teetime","instructors","giveaway","comment","dm","proactive","autoreply"],
     hotel:          ["checkin","gamefinder","comment","dm","proactive"],
