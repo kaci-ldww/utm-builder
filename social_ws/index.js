@@ -172,8 +172,8 @@ function buildURL() {
     if (f.medium)   params.set("utm_medium",   fmt(f.medium));
     if (f.campaign) params.set("utm_campaign", fmt(f.campaign));
     if (f.content)  params.set("utm_content",  fmt(f.content));
-    if (f.term)     params.set("utm_term",     fmt(f.term));
-    if (f.other)    params.set("utm_other",    fmt(f.other));
+    var termValue = [f.term, f.other].filter(Boolean).map(fmt).join("_");
+    if (termValue)  params.set("utm_term", termValue);
     var qs = params.toString();
     var base = f.url.includes("?") ? f.url + "&" : f.url + "?";
     return { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, content: f.content, term: f.term, other: f.other, params: Object.fromEntries(params), full: qs ? base + qs : f.url };
