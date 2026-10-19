@@ -17,7 +17,7 @@ const CAMPAIGN_PRESETS = [
 const CONTENT_BY_CAMPAIGN = {
     entertainment:  ["general","announce","onsale","reminder","onsalereminder","presale","upsell","reschedule","reply","postshow","package","cancellation","passporttosummer"],
     brandawareness: ["explorewinstar","general","gozone","wsapp","winstarwinners","passporttosummer","TCUoffer",],
-    gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","10kgames","rmg","offer","passporttosummer","clubpassport","influencer"],
+    gaming:         ["general","promotions","cardgames","ballanddice","jackpot","newplayer","inactives","newmember","egames","10kgames","rmg","offer","passporttosummer","clubpassport","influencer","wbw"],
     golf:           ["general","academy","courses","membership","proshop","golftournaments","clubhouse","signup","partnership","retail","passporttosummer"],
     hotel:          ["gaming","shuttle","reply","dining","wsapp","offer","passporttosummer"],
     amenities:      ["pool","dining","spa","shopping","events","gaming","shuttle","golf","clubpassport","mywinstar","giveaway","passporttosummer"],
