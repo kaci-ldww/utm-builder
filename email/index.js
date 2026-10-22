@@ -18,19 +18,19 @@ const CLIENT_CONFIG = {
     ws: {
         drivers: [
             { label: "Entertainment",   code: "ent",            utmCampaign: "entertainment",
-                content: ["presale","onsale","ticketpush_genre","ticketpush_hotel","ttgt","postshow","bogo","rescheduled","canceled","giveaway","winstarwinners","partnerut"],
+                content: ["presale","onsale","ticketpush_genre","ticketpush_hotel","ttgt","postshow","bogo","rescheduled","canceled","giveaway","winstarwinners","partnerut","partnerou"],
                 desc: "artist_dropdown", type2:[ "touch2","touch3","touch4","touch5","touch6a","touch6b","touch7" ]},
             { label: "Gaming",          code: "gaming",         utmCampaign: "gaming",
-                content: ["promotion","mywinstar","clubpassport","influencer","winstarwinners","partnerut"],
+                content: ["promotion","mywinstar","clubpassport","influencer","winstarwinners","partnerut","wbw","partnerou"],
                 desc: ["membership","awareness","ladyluck","nurture","presale"], type2: ["newmember","uncarded","carded","prospect","touch2","touch3","touch4","touch5","touch6a","touch6b","touch7","jhgp"] },
             { label: "Brand Awareness", code: "brandawareness", utmCampaign: "brandawareness",
-                content: ["reengagement","gozone","welcome","giveaway","winstarwinners","partnerut"],
+                content: ["reengagement","gozone","welcome","giveaway","winstarwinners","partnerut","partnerou"],
                 desc: ["reengagement1","reengagement2","reengagement3","nurture"], type2: ["touch2","touch3","touch4","touch5","touch6a","touch6b","touch7"] },
             { label: "Amenities",       code: "amenities",      utmCampaign: "hotel",
-                content: ["hotel","spa","pool","dining","meet","winstarwinners","partnerut"],
+                content: ["hotel","spa","pool","dining","meet","winstarwinners","partnerut","partnerou"],
                 desc: ["retailpackage","conventions","weddings","catering","prestay1","prestay2","nurture"], type2: ["couples","touch2","touch3","touch4","touch5","touch6a","touch6b","touch7"] },
             { label: "Golf",            code: "golf",           utmCampaign: "golf",
-                content: ["instruction","retailpackage","membership","tournaments","winstarwinners","partnerut"],
+                content: ["instruction","retailpackage","membership","tournaments","winstarwinners","partnerut","partnerou"],
                 desc: ["email1","email2","email3","nurture"], type2: ["touch2","touch3","touch4","touch5","touch6a","touch6b","touch7"] }
         ]
     },
